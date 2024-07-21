@@ -1,0 +1,64 @@
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - JwtAuthenticationFilter
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: create-chat
+          uri: http://localhost:8085
+          predicates:
+            - Path=/chats
+            - Method=POST
+        - id: web-socket
+          uri: http://localhost:8085
+          predicates:
+            - Path=/ws/info
+        - id: all-chats-route
+          uri: http://localhost:8085
+          predicates:
+          - Path=/chats
+          - Method=GET
+
+        - id: get-definite-chat
+          uri: http://localhost:8085
+          predicates:
+            - Path=/chats/**
+            - Method=GET
+        - id: send-message
+          uri: http://localhost:8085
+          predicates:
+            - Path=/chats/**
+            - Method=POST
+        - id: add-participant
+          uri: http://localhost:8085
+          predicates:
+            - Path=/chats/**
+            - Method=PUT
+
+        - id: profile
+          uri: http://localhost:8084
+          predicates:
+            - Path=/profile
+            - Method=GET
+        - id: registration
+          uri: http://localhost:8089
+          predicates:
+            - Path=/registration
+            - Method=POST
+        - id: authorization
+          uri: http://localhost:8089
+          predicates:
+            - Path=/auth
+            - Method=POST
+        - id: edit-user
+          uri: http://localhost:8086
+          predicates:
+            - Path=/profile
+            - Method=PUT
+
+server:
+  port: ${SERVER_PORT}

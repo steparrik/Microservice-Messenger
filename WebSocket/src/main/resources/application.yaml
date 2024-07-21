@@ -1,0 +1,15 @@
+spring:
+  application:
+     name: web-socket
+  rabbitmq:
+    host: ${RABBIT_HOST}
+    port: ${RABBIT_PORT}
+    username: ${RABBIT_USERNAME}
+    password: ${RABBIT_PASSWORD}
+    virtual-host: ${RABBIT_V_HOST}
+    listener:
+      simple:
+        default-requeue-rejected: false
+server:
+  port: ${SERVER_PORT}
+

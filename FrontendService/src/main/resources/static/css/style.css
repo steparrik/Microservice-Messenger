@@ -1,0 +1,330 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ff7156;
+    margin: 0;
+    padding: 0;
+}
+.notification-icon {
+    position: absolute; /* Позиционирование для размещения в правом верхнем углу */
+    top: 10px; /* Отступ сверху */
+    right: 10px; /* Отступ справа */
+    width: 40px; /* Ширина значка */
+    height: 40px; /* Высота значка */
+    background-color: #ff6b4f; /* Цвет фона значка */
+    border-radius: 50%; /* Округление до овала */
+    display: flex; /* Используем flexbox для центрирования текста */
+    align-items: center; /* Вертикальное выравнивание текста по центру */
+    justify-content: center; /* Горизонтальное выравнивание текста по центру */
+    color: #ffffff; /* Цвет текста */
+    font-size: 18px; /* Размер шрифта текста */
+    font-weight: bold; /* Жирный шрифт текста */
+    z-index: 10; /* Слой отображения (чтобы он был поверх других элементов) */
+}
+
+/* Дополнительные стили для текста внутри значка */
+.notification-text {
+    line-height: 40px; /* Высота строки соответствует высоте значка */
+    text-align: center; /* Центрирование текста */
+    margin: 0; /* Убираем отступы */
+    display: flex; /* Используем flexbox для точного центрирования текста */
+    align-items: center; /* Вертикальное выравнивание текста по центру */
+    justify-content: center; /* Горизонтальное выравнивание текста по центру */
+}
+img {
+    width: 100px; /* Ширина изображения */
+    height: 100px; /* Высота изображения */
+    border-radius: 50%; /* Делаем изображение круглым */
+    object-fit: cover; /* Чтобы изображение не искажалось */
+    float: left; /* Размещаем изображение справа */
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+header nav {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 20px;
+}
+
+header nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    margin-left: 20px;
+    padding: 10px 15px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+header nav a:hover {
+    color: #ff6347;
+    background-color: #555;
+}
+
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input[type="text"],
+input[type="password"],
+button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+
+button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 12px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #ff6347;
+}
+
+#error {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* Медиа-запросы для адаптивного дизайна */
+@media (max-width: 600px) {
+    main {
+        max-width: 300px;
+    }
+
+    header nav {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 400px) {
+    main {
+        padding: 10px;
+    }
+}
+
+/* Стили для страниц чатов */
+#chat-page {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.chat-container {
+    margin-bottom: 20px;
+}
+
+.chat-header {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    font-size: 20px;
+    text-align: center;
+}
+
+ul#messageArea {
+    list-style-type: none;
+    padding: 0;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+#messageForm {
+    margin-top: 20px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+
+}
+
+
+.input-group input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    scroll-padding-bottom: 80px;
+}
+
+.input-group button {
+    width: auto; /* Кнопка будет подстраиваться под размер текста */
+    padding: 10px 15px; /* Добавляем горизонтальные отступы */
+    margin-left: 10px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+
+.input-group button:hover {
+    background-color: #0056b3;
+}
+
+/* Стили для сообщений */
+.message {
+    max-width: 70%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 20px;
+    clear: both;
+    word-wrap: break-word;
+}
+
+button[class="new-chat"] {
+    width: auto; /* Кнопка будет подстраиваться под размер текста */
+    padding: 10px 15px; /* Добавляем горизонтальные отступы */
+    margin-left: 10px;
+    border: none;
+    color: #fff;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.message.left {
+    background-color: #eaeaea;
+    float: left;
+}
+
+rightM {
+    float: right;
+}
+
+
+
+
+.message.right {
+    background-color: #c7e9ff;
+    float: right;
+}
+
+.message .message-text {
+    font-size: 18px;
+    margin-bottom: 3px;
+}
+
+.message .message-time {
+    font-size: 12px;
+    color: #888;
+    text-align: right;
+}
+
+.message .senderNameMini {
+    font-size: 13px;
+    font-weight: bold;
+    color: #007bff;
+    text-align: left;
+}
+
+/* Убираем горизонтальную прокрутку */
+ul#messageArea {
+    overflow-x: hidden;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+}
+
+ul#messageArea::-webkit-scrollbar {
+    width: 0;  /* Chrome, Safari, and Opera */
+}
+
+/* Основные стили для списка чатов */
+#chatList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Стили для каждого элемента чата */
+.chat-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: relative; /* Устанавливаем относительное позиционирование для элемента чата */
+    border-bottom: 1px solid #ddd; /* Небольшая граница для разделения элементов */
+}
+
+.chat-item:hover {
+    background-color: #f1f1f1;
+}
+
+/* Стили для ссылки на чат */
+.chat-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+}
+
+/* Стили для иконки чата */
+.chat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+/* Стили для деталей чата */
+.chat-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-name {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.chat-last-message {
+    font-size: 12px;
+    color: #999;
+}
