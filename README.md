@@ -1,1 +1,1 @@
-[Architecture](architecture.drawio.png)
+![Architecture](architecture.drawio.png)
