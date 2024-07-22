@@ -7,10 +7,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import steparrik.dto.user.AuthUserDto;
+import steparrik.dto.user.EditUserDto;
 import steparrik.dto.user.RegistrationUserDto;
 import steparrik.manager.AuthManager;
 import steparrik.manager.CheckJwtManager;
+import steparrik.manager.EditManager;
 import steparrik.manager.RegistrationManager;
+
+import java.security.Principal;
 
 
 @RestController
@@ -20,6 +24,7 @@ public class MainController {
     private final AuthManager authManager;
     private final RegistrationManager registrationManager;
     private final CheckJwtManager checkJwtManager;
+    private final EditManager editManager;
 
 
     @PostMapping("/auth")
@@ -36,6 +41,13 @@ public class MainController {
     public ResponseEntity<?> checkJwt(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
         return checkJwtManager.checkJwt(authHeader);
     }
+
+
+    @PutMapping("/editUser")
+    public ResponseEntity<?> editProfile(@RequestBody EditUserDto editUserDto, @RequestHeader(value = "X-Username", required = true) String username) {
+        return editManager.editUser(editUserDto, username);
+    }
+
 
 
 }

@@ -22,7 +22,6 @@ spring:
           predicates:
           - Path=/chats
           - Method=GET
-
         - id: get-definite-chat
           uri: http://localhost:8085
           predicates:
@@ -38,7 +37,6 @@ spring:
           predicates:
             - Path=/chats/**
             - Method=PUT
-
         - id: profile
           uri: http://localhost:8084
           predicates:
@@ -55,9 +53,9 @@ spring:
             - Path=/auth
             - Method=POST
         - id: edit-user
-          uri: http://localhost:8086
+          uri: http://localhost:8089
           predicates:
-            - Path=/profile
+            - Path=/editUser
             - Method=PUT
 
 server:
