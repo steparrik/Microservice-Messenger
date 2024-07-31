@@ -1,15 +1,20 @@
 package steparrik.service;
 
+import jakarta.persistence.metamodel.ListAttribute;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.liquibase.LiquibaseDataSource;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import steparrik.dto.chat.ChatForMenuChatsDto;
+import steparrik.dto.user.ProfileUserDto;
 import steparrik.model.chat.Chat;
 import steparrik.model.chat.ChatType;
 import steparrik.model.user.User;
 import steparrik.repository.ChatRepository;
 import steparrik.utils.mapper.chat.ChatForMenuChatsMapper;
+import steparrik.utils.mapper.user.ProfileUserMapper;
 
 import java.util.Comparator;
 import java.util.List;
@@ -22,6 +27,7 @@ import java.util.stream.Collectors;
 public class ChatService {
     private final ChatRepository chatRepository;
     private final ChatForMenuChatsMapper chatForMenuChatsMapper;
+    private final ProfileUserMapper profileUserMapper;
 
     @Transactional
     public void save(Chat chat) {
@@ -31,6 +37,15 @@ public class ChatService {
     public Optional<Chat> findChatById(Long id) {
         return chatRepository.findById(id);
     }
+    public List<ProfileUserDto> getParticipants(long id){
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return findChatById(id).get().getParticipants().stream().map(profileUserMapper::toDto).collect(Collectors.toList());
+    }
+
 
     public List<Chat> chats(User user) {
         List<Chat> chats =  chatRepository.findAllByParticipants(user);

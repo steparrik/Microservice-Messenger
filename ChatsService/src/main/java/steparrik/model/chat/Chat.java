@@ -5,11 +5,11 @@ import lombok.*;
 import steparrik.model.message.Message;
 import steparrik.model.user.User;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "chats")
-@ToString
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,7 +21,7 @@ public class Chat {
 
     private String name;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(joinColumns = @JoinColumn(name = "chats"),
             inverseJoinColumns = @JoinColumn(name ="participants"))
     private List<User> participants;

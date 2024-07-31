@@ -2,13 +2,11 @@ package steparrik.model.user;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import steparrik.model.chat.Chat;
 import steparrik.model.message.Message;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity

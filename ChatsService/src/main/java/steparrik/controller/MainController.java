@@ -20,7 +20,7 @@ public class MainController {
 
     @GetMapping
     public ResponseEntity<?> chats(@RequestHeader(value = "X-Username", required = false) String username) {
-        return chatManager.getChats(username);
+        return ResponseEntity.ok(chatManager.getChats(username));
     }
 
     @PostMapping
@@ -33,6 +33,11 @@ public class MainController {
     @GetMapping("/{id}")
     public ResponseEntity<?> definiteChat(@PathVariable long id, @RequestHeader(value = "X-Username", required = false) String username){
         return definiteChatManager.getDefiniteChat(id, username);
+    }
+
+    @GetMapping("/{id}/participants")
+    public ResponseEntity<?> allParticipants(@PathVariable long id, @RequestHeader(value = "X-Username", required = false) String username){
+        return ResponseEntity.ok(chatManager.getParticipants(id));
     }
 
     @PostMapping("/{id}")

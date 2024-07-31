@@ -38,6 +38,11 @@ spring:
           predicates:
             - Path=/chats/**
             - Method=PUT
+        - id: all-participant
+          uri: http://localhost:8085
+          predicates:
+            - Path=/chats/{id}/participants
+            - Method=GET
 
         - id: profile
           uri: http://localhost:8084

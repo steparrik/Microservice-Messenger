@@ -5,6 +5,7 @@ import lombok.*;
 import steparrik.model.chat.Chat;
 import steparrik.model.user.User;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
