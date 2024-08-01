@@ -12,6 +12,10 @@ public class ProfileUserMapper {
         profileUserDto.setUsername(user.getUsername());
         profileUserDto.setFullName(user.getFullName());
         profileUserDto.setPhoneNumber(user.getPhoneNumber());
+
+        if(user.getPathToAvatar()!=null) {
+            profileUserDto.setPathToAvatar(user.getPathToAvatar());
+        }
         return profileUserDto;
     }
 }

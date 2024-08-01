@@ -19,12 +19,16 @@ import steparrik.utils.mapper.user.RegistrationUserMapper;
 @RequiredArgsConstructor
 public class ConsumerService {
     private final UserService userService;
+    private final RegistrationUserMapper registrationUserMapper;
 
+    @Value("${PATH_TO_DEFAULT_AVATAR}")
+    private String pathToDefAvatar;
 
     @KafkaListener(topics = "save-topic", groupId = "A")
     public void saveListener(RegistrationUserDto registrationUserDto) {
-        RegistrationUserMapper registrationUserMapper = new RegistrationUserMapper();
-        userService.save(registrationUserMapper.toEntity(registrationUserDto));
+        User user = registrationUserMapper.toEntity(registrationUserDto);
+        user.setPathToAvatar(pathToDefAvatar);
+        userService.save(user);
         log.info(registrationUserDto.getUsername() + " добавлен в users");
     }
 }

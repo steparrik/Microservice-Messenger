@@ -30,6 +30,7 @@ public class User {
 
     private String fullName;
 
+    private String pathToAvatar;
     public User(String password, String username, String phoneNumber, String fullName) {
         this.password = password;
         this.username = username;

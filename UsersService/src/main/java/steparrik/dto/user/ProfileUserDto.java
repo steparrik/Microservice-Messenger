@@ -1,6 +1,7 @@
 package steparrik.dto.user;
 
 import lombok.*;
+import org.apache.kafka.common.protocol.types.Field;
 
 @Getter
 @Setter
@@ -13,4 +14,6 @@ public class ProfileUserDto  {
     private String phoneNumber;
 
     private String fullName;
+
+    private String pathToAvatar;
 }

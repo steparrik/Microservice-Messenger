@@ -449,13 +449,14 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
     }
 
     if (profilePage) {
-        async function profileFunc() {
             const user = await getProfile();
+
 
             const profileLi = document.createElement('div');
 
             const username = document.createElement("a");
             username.textContent = "Никнейм: " + user.username;
+            console.log(username)
 
             const pN = document.createElement("a");
             pN.textContent = "Номер телефона: " + user.phoneNumber;
@@ -463,9 +464,8 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
             const fN = document.createElement("a");
             fN.textContent = "Полное имя: " + user.fullName;
 
-
-
-            console.log(user);
+            const pA = document.createElement("img")
+            pA.src= user.pathToAvatar;
 
             profileLi.appendChild(username);
             profileLi.appendChild(document.createElement("br"))
@@ -475,15 +475,13 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
             profileLi.appendChild(document.createElement("br"))
 
             profileData.appendChild(profileLi);
+            profileData.appendChild(pA)
 
 
             profilePage.addEventListener("submit", function (event) {
                     localStorage.removeItem("jwt")
                 }
             )
-        }
-
-        profileFunc()
     }
 
     if (registerForm) {
@@ -606,6 +604,8 @@ function sendMessageOnServer(chatId, text) {
             return data
         });
 }
+
+
 
 function addAndGetNewDialog(nameCompanion){
     return fetch('http://192.168.31.143:8086/chats' +
