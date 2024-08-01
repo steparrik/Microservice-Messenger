@@ -26,6 +26,7 @@ public class MainController {
         return profileManager.myProfile(username);
     }
 
+
     @PostMapping("/addAvatar")
     public ResponseEntity<?> photo(@RequestParam("file") MultipartFile file, @RequestHeader(value = "X-Username", required = false) String username) {
          return addAvatarManager.uploadAvatar(username, file);

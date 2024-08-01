@@ -64,9 +64,9 @@ spring:
             - Path=/auth
             - Method=POST
         - id: edit-user
-          uri: http://localhost:8086
+          uri: http://localhost:8089
           predicates:
-            - Path=/profile
+            - Path=/editUser
             - Method=PUT
 
 server:
