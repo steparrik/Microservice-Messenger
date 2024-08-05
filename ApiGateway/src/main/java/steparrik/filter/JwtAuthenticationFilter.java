@@ -51,7 +51,7 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
 
             return webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8089/check")
+                    .uri("http://auth:8089/check")
                     .header(HttpHeaders.AUTHORIZATION, authHeader)
                     .retrieve()
                     .bodyToMono(Map.class)

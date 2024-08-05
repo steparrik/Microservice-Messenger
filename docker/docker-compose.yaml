@@ -1,0 +1,163 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/var/lib/data/redis
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9092,OUTSIDE://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d
+
+  web-socket:
+    build:
+      context: ../WebSocket
+      dockerfile: ../WebSocket/docker/Dockerfile
+    ports:
+      - "${WEB_SERVER_PORT}:${WEB_SERVER_PORT}"
+    environment:
+      RABBIT_HOST: rabbitmq
+      RABBIT_PORT: 5672
+      RABBIT_USERNAME: ${RABBIT_USERNAME}
+      RABBIT_PASSWORD: ${RABBIT_PASSWORD}
+      RABBIT_V_HOST: ${RABBIT_V_HOST}
+      SERVER_PORT: ${WEB_SERVER_PORT}
+    depends_on:
+      - rabbitmq
+
+  notification:
+    build:
+      context: ../NotificationService
+      dockerfile: ../NotificationService/docker/Dockerfile
+    ports:
+      - "${NOTIFICATION_SERVER_PORT}:${NOTIFICATION_SERVER_PORT}"
+    environment:
+      spring.datasource.url: ${DATABASE_URL_CHATS}
+      spring.datasource.username: ${POSTGRES_USER}
+      spring.datasource.password: ${POSTGRES_PASSWORD}
+      RABBIT_HOST: rabbitmq
+      RABBIT_PORT: 5672
+      RABBIT_USERNAME: ${RABBIT_USERNAME}
+      RABBIT_PASSWORD: ${RABBIT_PASSWORD}
+      RABBIT_V_HOST: ${RABBIT_V_HOST}
+      SERVER_PORT: ${NOTIFICATION_SERVER_PORT}
+      KAFKA_BOOTSTRAP_SERVER: ${KAFKA_BOOTSTRAP_SERVER}
+    depends_on:
+      - rabbitmq
+      - postgres
+
+  auth:
+    build:
+      context: ../AuthService
+      dockerfile: ../AuthService/docker/Dockerfile
+    ports:
+      - "${AUTH_SERVER_PORT}:${AUTH_SERVER_PORT}"
+    environment:
+      spring.datasource.url: ${DATABASE_URL_AUTH}
+      spring.datasource.username: ${POSTGRES_USER}
+      spring.datasource.password: ${POSTGRES_PASSWORD}
+      server.port: ${AUTH_SERVER_PORT}
+      KAFKA_BOOTSTRAP_SERVER: ${KAFKA_BOOTSTRAP_SERVER}
+      jwt.secret: ${JWT_SECRET}
+      JWT_LIFE: ${JWT_LIFE}
+    depends_on:
+      - postgres
+
+  chats:
+    build:
+      context: ../ChatsService
+      dockerfile: ../ChatsService/docker/Dockerfile
+    ports:
+      - "${CHATS_SERVER_PORT}:${CHATS_SERVER_PORT}"
+    environment:
+      spring.datasource.url: ${DATABASE_URL_CHATS}
+      spring.datasource.username: ${POSTGRES_USER}
+      spring.datasource.password: ${POSTGRES_PASSWORD}
+      server.port: ${CHATS_SERVER_PORT}
+      KAFKA_BOOTSTRAP_SERVER: ${KAFKA_BOOTSTRAP_SERVER}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+    depends_on:
+      - postgres
+      - redis
+
+  users:
+    build:
+      context: ../UsersService
+      dockerfile: ../UsersService/docker/Dockerfile
+    ports:
+      - "${USERS_SERVER_PORT}:${USERS_SERVER_PORT}"
+    volumes:
+      - ../UsersService/src/main/resources/messenger-4c416-firebase-adminsdk-4vygk-6e991a8920.json:/usr/src/app/messenger-4c416-firebase-adminsdk-4vygk-6e991a8920.json
+    environment:
+      PATH_TO_FIRE: /usr/src/app/messenger-4c416-firebase-adminsdk-4vygk-6e991a8920.json
+      spring.datasource.url: ${DATABASE_URL_USERS}
+      spring.datasource.username: ${POSTGRES_USER}
+      spring.datasource.password: ${POSTGRES_PASSWORD}
+      server.port: ${USERS_SERVER_PORT}
+      KAFKA_BOOTSTRAP_SERVER: ${KAFKA_BOOTSTRAP_SERVER}
+      NAME_BUCKET: ${NAME_BUCKET}
+      PATH_TO_DEFAULT_AVATAR: ${PATH_TO_DEFAULT_AVATAR}
+    depends_on:
+      - postgres
+
+  api:
+    build:
+      context: ../ApiGateway
+      dockerfile: ../ApiGateway/docker/Dockerfile
+    ports:
+      - "${API_SERVER_PORT}:${API_SERVER_PORT}"
+    environment:
+      server.port: ${API_SERVER_PORT}
+
+
+  front:
+    build:
+      context: ../FrontendService
+      dockerfile: ../FrontendService/docker/Dockerfile
+    ports:
+      - "8082:8082"
+volumes:
+  pgdata:
+  rabbitmq_data:
+  redis_data:

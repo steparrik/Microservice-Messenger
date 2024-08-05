@@ -1,5 +1,7 @@
 package steparrik.config;
 
+import com.rabbitmq.client.AMQP;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -13,6 +15,17 @@ import org.springframework.context.annotation.Configuration;
 @EnableRabbit
 
 public class RabbitMQConfig {
+
+
+    @Bean
+    public Queue messageQueue() {
+        return new Queue("messageQueue", true);
+    }
+
+    @Bean
+    public Queue notificationQueue() {
+        return new Queue("notificationQueue", true);  // true означает, что очередь устойчивая
+    }
 
     @Bean
     public Jackson2JsonMessageConverter jackson2JsonMessageConverter() {
