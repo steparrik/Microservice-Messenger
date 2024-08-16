@@ -17,8 +17,8 @@ spring:
         - id: all-chats-route
           uri: http://chats:8085
           predicates:
-          - Path=/chats
-          - Method=GET
+            - Path=/chats
+            - Method=GET
 
         - id: get-definite-chat
           uri: http://chats:8085
