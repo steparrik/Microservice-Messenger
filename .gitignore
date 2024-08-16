@@ -7,3 +7,5 @@
 /NotificationService/docker/NotificationService-0.0.1-SNAPSHOT.jar
 /UsersService/docker/UsersService-0.0.1-SNAPSHOT.jar
 /WebSocket/docker/WebSocket-0.0.1-SNAPSHOT.jar
+/UsersService/src/main/java/steparrik/config/firebase/messenger-4c416-firebase-adminsdk-4vygk-6e991a8920.json
+/UsersService/src/main/resources/messenger-4c416-firebase-adminsdk-4vygk-6e991a8920.json

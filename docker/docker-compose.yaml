@@ -52,7 +52,7 @@ services:
   web-socket:
     build:
       context: ../WebSocket
-      dockerfile: ../WebSocket/docker/Dockerfile
+      dockerfile: ../WebSocket/Dockerfile
     ports:
       - "${WEB_SERVER_PORT}:${WEB_SERVER_PORT}"
     environment:
@@ -68,7 +68,7 @@ services:
   notification:
     build:
       context: ../NotificationService
-      dockerfile: ../NotificationService/docker/Dockerfile
+      dockerfile: ../NotificationService/Dockerfile
     ports:
       - "${NOTIFICATION_SERVER_PORT}:${NOTIFICATION_SERVER_PORT}"
     environment:
@@ -89,7 +89,7 @@ services:
   auth:
     build:
       context: ../AuthService
-      dockerfile: ../AuthService/docker/Dockerfile
+      dockerfile: ../AuthService/Dockerfile
     ports:
       - "${AUTH_SERVER_PORT}:${AUTH_SERVER_PORT}"
     environment:
@@ -106,7 +106,7 @@ services:
   chats:
     build:
       context: ../ChatsService
-      dockerfile: ../ChatsService/docker/Dockerfile
+      dockerfile: ../ChatsService/Dockerfile
     ports:
       - "${CHATS_SERVER_PORT}:${CHATS_SERVER_PORT}"
     environment:
@@ -124,7 +124,7 @@ services:
   users:
     build:
       context: ../UsersService
-      dockerfile: ../UsersService/docker/Dockerfile
+      dockerfile: ../UsersService/Dockerfile
     ports:
       - "${USERS_SERVER_PORT}:${USERS_SERVER_PORT}"
     volumes:
@@ -144,7 +144,7 @@ services:
   api:
     build:
       context: ../ApiGateway
-      dockerfile: ../ApiGateway/docker/Dockerfile
+      dockerfile: ../ApiGateway/Dockerfile
     ports:
       - "${API_SERVER_PORT}:${API_SERVER_PORT}"
     environment:
@@ -154,7 +154,7 @@ services:
   front:
     build:
       context: ../FrontendService
-      dockerfile: ../FrontendService/docker/Dockerfile
+      dockerfile: ../FrontendService/Dockerfile
     ports:
       - "8082:8082"
 volumes:

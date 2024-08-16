@@ -12,7 +12,7 @@
     </parent>
 
     <groupId>steparrik</groupId>
-    <artifactId>parent-project</artifactId>
+    <artifactId>Microservice-Messenger</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
