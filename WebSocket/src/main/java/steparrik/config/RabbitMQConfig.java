@@ -23,7 +23,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue notificationQueue() {
-        return new Queue("notificationQueue", true);  // true означает, что очередь устойчивая
+        return new Queue("notificationQueue", true);
     }
 
     @Bean

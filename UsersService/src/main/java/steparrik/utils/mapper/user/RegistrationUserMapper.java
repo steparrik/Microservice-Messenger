@@ -7,7 +7,6 @@ import steparrik.model.user.User;
 
 @Component
 public class RegistrationUserMapper {
-
     public User toEntity(RegistrationUserDto registrationUserDto){
         User user = new User();
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();

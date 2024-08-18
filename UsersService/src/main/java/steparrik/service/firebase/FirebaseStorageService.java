@@ -5,23 +5,29 @@ import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
 import com.google.firebase.cloud.StorageClient;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import steparrik.utils.exception.ApiException;
 
 import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
 public class FirebaseStorageService {
-    public Blob uploadFile(MultipartFile file) throws IOException {
+    public Blob uploadFile(MultipartFile file) {
         Bucket bucket = StorageClient.getInstance().bucket();
         Blob blob;
 
         if(file==null || file.isEmpty()){
-            throw new IOException("Файл не может быть пустым.");
+            throw new ApiException("Файл не может быть пустым", HttpStatus.BAD_REQUEST);
         }
 
-        blob = bucket.create(file.getOriginalFilename(), file.getBytes(), file.getContentType());
+        try {
+            blob = bucket.create(file.getOriginalFilename(), file.getBytes(), file.getContentType());
+        } catch (IOException e) {
+            throw new ApiException("Ошибка при преобразовнии файла", HttpStatus.BAD_REQUEST);
+        }
 
         blob.createAcl(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
 

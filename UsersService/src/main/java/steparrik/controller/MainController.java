@@ -5,25 +5,27 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import steparrik.manager.AddAvatarManager;
-import steparrik.manager.ProfileManager;
+import steparrik.model.user.User;
+import steparrik.service.UserService;
+import steparrik.utils.mapper.user.ProfileUserMapper;
 
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 public class MainController {
-    private final ProfileManager profileManager;
-    private final AddAvatarManager addAvatarManager;
+    private final UserService userService;
+    private final ProfileUserMapper profileUserMapper;
 
     @GetMapping("/profile")
-    public ResponseEntity<?> profile(@RequestHeader(value = "X-Username", required = false) String username) {
-        return profileManager.myProfile(username);
+    public ResponseEntity<?> profile(@RequestHeader(value = "X-Username") String username) {
+        User user =  userService.findUserByUsername(username);
+        return ResponseEntity.ok().body(profileUserMapper.toDto(user));
     }
 
 
     @PostMapping("/addAvatar")
-    public ResponseEntity<?> photo(@RequestParam("file") MultipartFile file, @RequestHeader(value = "X-Username", required = false) String username) {
-         return addAvatarManager.uploadAvatar(username, file);
+    public ResponseEntity<?> photo(@RequestParam("file") MultipartFile file,
+                                   @RequestHeader(value = "X-Username") String username) {
+         return ResponseEntity.ok().body(userService.uploadAvatar(username, file));
     }
 
 

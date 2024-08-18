@@ -1,4 +1,4 @@
-package steparrik.usersservice.utils.exceptions;
+package steparrik.utils.exception;
 
 import lombok.*;
 
@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @ToString
 public class ExceptionEntity {
     private String message;

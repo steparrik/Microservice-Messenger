@@ -219,7 +219,10 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
             const nameCompanion = document.querySelector("#nameCompanion").value
             console.log(nameCompanion)
             event.preventDefault()
-            const response = await addAndGetNewDialog(nameCompanion);
+            const newChatData = {
+                chatType: "DIALOG"
+            }
+            const response = await addAndGetNewDialog(nameCompanion, JSON.stringify(newChatData));
             if (response === null) {
                 console.log("error")
             } else {
@@ -231,11 +234,12 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
             if (nameGroup === null || nameGroup === "") {
                 return
             }
-            const name = {
+            const newChatData = {
+                chatType: "GROUP",
                 name: nameGroup
             }
             event.preventDefault()
-            const response = await addAndGetNewGroup(JSON.stringify(name
+            const response = await addAndGetNewGroup(JSON.stringify(newChatData
             ))
             if (response === null) {
                 console.log("error")
@@ -607,14 +611,14 @@ function sendMessageOnServer(chatId, text) {
 
 
 
-function addAndGetNewDialog(nameCompanion){
+function addAndGetNewDialog(nameCompanion, newChatData){
     return fetch('http://192.168.31.143:8086/chats' +
         '?username='+nameCompanion, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + localStorage.getItem("jwt")
-        }
+        }, body: newChatData
     })
         .then(async response => {
             if (!response.ok) {
