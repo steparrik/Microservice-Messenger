@@ -5,15 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import steparrik.model.user.User;
 import steparrik.repository.UserRepository;
 import steparrik.service.firebase.FirebaseStorageService;
 import steparrik.utils.exception.ApiException;
-
-import java.io.IOException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
