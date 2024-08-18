@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import steparrik.dto.chat.ChatForCorrespondDto;
 import steparrik.model.chat.Chat;
-import steparrik.service.UserService;
 import steparrik.utils.mapper.message.MessageMapper;
 import steparrik.utils.mapper.user.ProfileUserMapper;
 

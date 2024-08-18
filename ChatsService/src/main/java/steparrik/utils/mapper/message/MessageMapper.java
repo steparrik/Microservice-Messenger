@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import steparrik.dto.message.MessageDTO;
 import steparrik.model.message.Message;
-
 import steparrik.utils.mapper.user.ProfileUserMapper;
 
 @Component
@@ -29,4 +28,5 @@ public class MessageMapper {
 
         return messageDTO;
     }
+
 }

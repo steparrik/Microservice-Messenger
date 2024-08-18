@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import steparrik.dto.user.RegistrationUserDto;
 import steparrik.model.user.User;
+import steparrik.service.kafka.ProducerService;
 import steparrik.utils.mapper.user.RegistrationUserMapper;
+import steparrik.utils.validate.user.RegistrationDataValidate;
 
 @Service
 @RequiredArgsConstructor
@@ -15,9 +17,13 @@ import steparrik.utils.mapper.user.RegistrationUserMapper;
 public class RegistrationService {
     private final UserService userService;
     private final RegistrationUserMapper registrationUserMapper;
+    private final RegistrationDataValidate registrationDataValidate;
+    private final ProducerService producerService;
 
     @Transactional
     public void registration(RegistrationUserDto registrationUserDto) {
+        registrationDataValidate.validateRegistrationDate(registrationUserDto);
+        producerService.save(registrationUserDto);
         User user = registrationUserMapper.toEntity(registrationUserDto);
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         user.setPassword(bCryptPasswordEncoder.encode(registrationUserDto.getPassword()));

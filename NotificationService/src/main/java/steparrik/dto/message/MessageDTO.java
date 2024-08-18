@@ -5,7 +5,6 @@ import lombok.*;
 import steparrik.dto.user.ProfileUserDto;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @ToString
 @Getter

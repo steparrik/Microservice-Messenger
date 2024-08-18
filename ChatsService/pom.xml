@@ -10,9 +10,7 @@
     </parent>
 
     <artifactId>ChatsService</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>chats-microservice</name>
-    <description>chats-microservice</description>
+    <name>ChatsService</name>
     <properties>
         <java.version>17</java.version>
     </properties>

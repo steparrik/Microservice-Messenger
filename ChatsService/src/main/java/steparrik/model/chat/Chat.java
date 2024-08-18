@@ -1,11 +1,14 @@
 package steparrik.model.chat;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.stereotype.Component;
 import steparrik.model.message.Message;
 import steparrik.model.user.User;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -27,6 +30,7 @@ public class Chat {
     private List<User> participants;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ChatType chatType;
 
     @OneToMany(mappedBy = "chat")

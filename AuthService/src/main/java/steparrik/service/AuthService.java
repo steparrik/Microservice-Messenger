@@ -1,6 +1,7 @@
 package steparrik.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import steparrik.dto.token.JwtResponseDto;
 import steparrik.dto.user.AuthUserDto;
+import steparrik.utils.exception.ApiException;
 import steparrik.utils.token.JwtTokenUtil;
 
 @Service
@@ -28,7 +30,7 @@ public class AuthService {
                             authRequest.getUsername(), authRequest.getPassword()));
         } catch (
                 BadCredentialsException e) {
-            return null;
+            throw new ApiException("Неверное имя пользователя или пароль", HttpStatus.BAD_REQUEST);
         }
         UserDetails userDetails = userDetailService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails);

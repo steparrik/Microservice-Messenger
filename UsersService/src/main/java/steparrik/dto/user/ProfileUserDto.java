@@ -1,7 +1,6 @@
 package steparrik.dto.user;
 
 import lombok.*;
-import org.apache.kafka.common.protocol.types.Field;
 
 @Getter
 @Setter

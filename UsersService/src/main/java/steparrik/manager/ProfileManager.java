@@ -8,7 +8,6 @@ import steparrik.model.user.User;
 import steparrik.service.UserService;
 import steparrik.utils.mapper.user.ProfileUserMapper;
 
-import java.security.Principal;
 import java.util.Optional;
 
 @Component

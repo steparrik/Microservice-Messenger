@@ -1,5 +1,6 @@
 package steparrik.dto.message;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import steparrik.dto.user.ProfileUserDto;
 import steparrik.model.chat.ChatType;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 public class MessageDTO {
     private Long id;
 
+    @NotEmpty(message = "Текст сообщения не может быть пустым")
     private String messageText;
 
     private LocalDateTime timestamp;

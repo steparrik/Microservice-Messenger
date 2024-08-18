@@ -2,12 +2,11 @@ package steparrik.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import steparrik.model.user.User;
 import steparrik.repository.UserRepository;
-
-import java.util.Optional;
+import steparrik.utils.exception.ApiException;
 
 @Service
 @RequiredArgsConstructor
@@ -15,21 +14,22 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
-    public Optional<User> findUserByUsername(String username) {
-        return userRepository.findUserByUsername(username);
+    public User findUserByUsername(String username) {
+        return userRepository.findUserByUsername(username).orElseThrow(()->
+                new ApiException("Нет пользователя с данным id", HttpStatus.NOT_FOUND));
     }
 
-    public Optional<User> findByPhoneNumber(String phoneNumber){
-        return userRepository.findByPhoneNumber(phoneNumber);
+    public User findByPhoneNumber(String phoneNumber){
+        return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(()->
+                new ApiException("Нет пользователя с данным номером телефона", HttpStatus.NOT_FOUND));
     }
-    @Transactional
     public void save(User user){
         userRepository.save(user);
     }
 
-    public Optional<User> searchByUsernameOrPhoneNumber(String username, String phoneNumber){
-        Optional<User> user = userRepository.searchByUsernameOrPhoneNumber(username, phoneNumber);
-        return user;
+    public User searchByUsernameOrPhoneNumber(String username, String phoneNumber){
+        return userRepository.searchByUsernameOrPhoneNumber(username, phoneNumber).orElseThrow(()->
+                new ApiException("Нет пользователя с данным ником или номером телефона", HttpStatus.NOT_FOUND));
     }
 
 

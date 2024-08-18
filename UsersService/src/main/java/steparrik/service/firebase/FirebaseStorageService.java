@@ -1,21 +1,14 @@
 package steparrik.service.firebase;
 
-import com.google.cloud.storage.*;
+import com.google.cloud.storage.Acl;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.Bucket;
 import com.google.firebase.cloud.StorageClient;
 import lombok.RequiredArgsConstructor;
-import org.apache.kafka.common.protocol.types.Field;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import steparrik.model.user.User;
-import steparrik.service.UserService;
-import steparrik.usersservice.utils.exceptions.ExceptionEntity;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor

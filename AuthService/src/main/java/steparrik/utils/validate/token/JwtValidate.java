@@ -15,13 +15,13 @@ import java.util.Map;
 public class JwtValidate {
     private final JwtTokenUtil jwtTokenUtil;
 
-    public Map<String, String> checkJwt(String token) {
+    public Map<String, String> checkJwt(String authHeader) {
+        String token = authHeader.substring(7);
         Map<String, String> userDetails = new HashMap<>();
         try {
             String username = jwtTokenUtil.getUsername(token);
             userDetails.put("username", username);
-        } catch (
-                ExpiredJwtException e) {
+        } catch (ExpiredJwtException e) {
             userDetails.put("error", "Время использования токена истекло");
         } catch (SignatureException | MalformedJwtException e) {
             userDetails.put("error", "Неверная запись токена");

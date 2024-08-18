@@ -5,7 +5,6 @@ import lombok.*;
 import steparrik.model.chat.Chat;
 import steparrik.model.user.User;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,13 +14,15 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Message {
+public class Message{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String messageText;
 
+    @Column(nullable = false)
     private LocalDateTime timestamp;
 
     @ManyToOne

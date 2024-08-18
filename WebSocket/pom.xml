@@ -10,9 +10,7 @@
     </parent>
 
     <artifactId>WebSocket</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>web-socket</name>
-    <description>web-socket</description>
+    <name>WebSocket</name>
 
     <properties>
         <java.version>17</java.version>

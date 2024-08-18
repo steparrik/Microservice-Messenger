@@ -1,4 +1,4 @@
-package steparrik.utils.exceptions;
+package steparrik.utils.exception;
 
 import lombok.*;
 

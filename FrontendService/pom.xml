@@ -10,11 +10,10 @@
     </parent>
 
     <artifactId>FrontendService</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>FrontendService</name>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
     </properties>
     <dependencies>
         <dependency>

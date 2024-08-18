@@ -10,9 +10,8 @@
     </parent>
 
     <artifactId>UsersService</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>profile-microservice</name>
-    <description>users-service</description>
+    <name>UsersService</name>
+
     <properties>
         <java.version>17</java.version>
     </properties>

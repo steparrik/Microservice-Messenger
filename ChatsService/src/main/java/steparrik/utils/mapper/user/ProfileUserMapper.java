@@ -4,7 +4,6 @@ package steparrik.utils.mapper.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import steparrik.dto.user.ProfileUserDto;
-import steparrik.dto.user.RegistrationUserDto;
 import steparrik.model.user.User;
 import steparrik.service.UserService;
 

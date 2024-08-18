@@ -1,5 +1,6 @@
 package steparrik.dto.chat;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import steparrik.model.chat.ChatType;
 
@@ -15,5 +16,6 @@ public  class ChatForMenuChatsDto implements Serializable {
 
     private String name;
 
+    @NotNull(message = "Тип чата должен быть задан обязательно")
     private ChatType chatType;
 }

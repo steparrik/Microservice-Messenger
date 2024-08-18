@@ -2,11 +2,13 @@ package steparrik.model.user;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import steparrik.model.chat.Chat;
 import steparrik.model.message.Message;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -20,18 +22,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
+    @Column(nullable = false)
     private String password;
 
-    @NotEmpty
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String username;
 
-    @NotEmpty
+    @Column(unique = true, nullable = false)
     private String phoneNumber;
 
+    @Column(nullable = false)
     private String fullName;
-
 
     @OneToMany(mappedBy = "sender")
     private List<Message> messages;

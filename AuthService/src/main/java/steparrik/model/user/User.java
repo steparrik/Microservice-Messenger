@@ -1,10 +1,8 @@
 package steparrik.model.user;
 
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
-import org.springframework.validation.annotation.Validated;
 
 
 @Entity
