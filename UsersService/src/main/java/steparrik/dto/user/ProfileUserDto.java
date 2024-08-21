@@ -8,6 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class ProfileUserDto  {
+    private Long id;
+
     private String username;
 
     private String phoneNumber;

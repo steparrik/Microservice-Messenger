@@ -3,9 +3,9 @@ package steparrik.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import steparrik.dto.message.MessageDTO;
+import steparrik.dto.user.ProfileUserDto;
 import steparrik.model.chat.Chat;
 import steparrik.model.message.Message;
-import steparrik.model.user.User;
 import steparrik.repository.MessageRepository;
 import steparrik.service.kafka.ProducerService;
 import steparrik.utils.mapper.message.MessageMapper;
@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class MessageService {
     private final MessageRepository messageRepository;
-    private final UserService userService;
     private final ChatService chatService;
 
     private final MessageMapper messageMapper;
@@ -27,11 +26,11 @@ public class MessageService {
         messageRepository.save(message);
     }
 
-    public MessageDTO sendMessage(long id, MessageDTO messageDTO, User sender, Chat chat) {
+    public MessageDTO sendMessage(long id, MessageDTO messageDTO, ProfileUserDto sender, Chat chat) {
         Message message = new Message();
 
         message.setMessageText(messageDTO.getMessageText());
-        message.setSender(sender);
+        message.setSenderId(sender.getId());
         message.setChat(chat);
         message.setTimestamp(LocalDateTime.now());
 

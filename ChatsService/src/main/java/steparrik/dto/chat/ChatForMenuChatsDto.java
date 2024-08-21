@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public  class ChatForMenuChatsDto implements Serializable {
+public class ChatForMenuChatsDto  {
     private Long id;
 
     private String name;

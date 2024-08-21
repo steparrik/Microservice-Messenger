@@ -3,7 +3,7 @@ package steparrik.model.message;
 import jakarta.persistence.*;
 import lombok.*;
 import steparrik.model.chat.Chat;
-import steparrik.model.user.User;
+
 
 import java.time.LocalDateTime;
 
@@ -25,9 +25,7 @@ public class Message{
     @Column(nullable = false)
     private LocalDateTime timestamp;
 
-    @ManyToOne
-    @JoinColumn(name = "sender_id", referencedColumnName = "id")
-    private User sender;
+    private Long senderId;
 
     @ManyToOne
     @JoinColumn(name = "chat_id", referencedColumnName = "id")

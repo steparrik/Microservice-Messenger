@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import steparrik.model.message.Message;
-import steparrik.model.user.User;
 
 import java.util.List;
 
@@ -23,10 +22,10 @@ public class Chat {
 
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(joinColumns = @JoinColumn(name = "chats"),
-            inverseJoinColumns = @JoinColumn(name ="participants"))
-    private List<User> participants;
+    @ElementCollection
+    @CollectionTable(name = "chat_participants", joinColumns = @JoinColumn(name = "chat_id"))
+    @Column(name = "user_id")
+    private List<Long> participantsId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

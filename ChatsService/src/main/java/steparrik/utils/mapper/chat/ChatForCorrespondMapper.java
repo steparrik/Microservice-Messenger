@@ -2,18 +2,18 @@ package steparrik.utils.mapper.chat;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import steparrik.client.UserClient;
 import steparrik.dto.chat.ChatForCorrespondDto;
 import steparrik.model.chat.Chat;
 import steparrik.utils.mapper.message.MessageMapper;
-import steparrik.utils.mapper.user.ProfileUserMapper;
 
 import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class ChatForCorrespondMapper {
-    private final ProfileUserMapper profileUserMapper;
     private final MessageMapper messageMapper;
+    private final UserClient userClient;
 
 
     public ChatForCorrespondDto toDto(Chat e) {
@@ -25,7 +25,7 @@ public class ChatForCorrespondMapper {
 
         chatForCorrespondDto.setId( e.getId() );
         chatForCorrespondDto.setName( e.getName() );
-        chatForCorrespondDto.setParticipants( e.getParticipants().stream().map(profileUserMapper::toDto).collect(Collectors.toList()));
+        chatForCorrespondDto.setParticipants(e.getParticipantsId().stream().map(userClient::getUserById).collect(Collectors.toList()));
         chatForCorrespondDto.setChatType( e.getChatType() );
         chatForCorrespondDto.setMessages(e.getMessages().stream().map(messageMapper::toDto).collect(Collectors.toList()));
 

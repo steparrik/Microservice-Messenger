@@ -18,10 +18,20 @@ public class UserService {
     private final UserRepository userRepository;
     private final FirebaseStorageService firebaseStorageService;
 
+    public User findById(Long id){
+        return userRepository.findById(id).orElseThrow(()->
+                new ApiException("Пользователь с данным ID не найден", HttpStatus.BAD_REQUEST));
+    }
     public User findUserByUsername(String username) {
         return userRepository.findUserByUsername(username).orElseThrow(()->
                 new ApiException("Пользователь с данным ником не найден", HttpStatus.NOT_FOUND));
     }
+
+    public User findByUsernameOrPhoneNumber(String username, String phoneNumber) {
+        return userRepository.findByUsernameOrPhoneNumber(username, phoneNumber).orElseThrow(()->
+                new ApiException("Пользователь с данным ником или номером телефона не найден", HttpStatus.NOT_FOUND));
+    }
+
 
 
     public void save(User user){

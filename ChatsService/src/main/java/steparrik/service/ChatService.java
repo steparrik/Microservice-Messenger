@@ -2,19 +2,19 @@ package steparrik.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import steparrik.client.UserClient;
 import steparrik.dto.chat.ChatForMenuChatsDto;
 import steparrik.dto.user.ProfileUserDto;
 import steparrik.model.chat.Chat;
 import steparrik.model.chat.ChatType;
 import steparrik.model.message.Message;
-import steparrik.model.user.User;
 import steparrik.repository.ChatRepository;
 import steparrik.utils.exception.ApiException;
 import steparrik.utils.mapper.chat.ChatForMenuChatsMapper;
-import steparrik.utils.mapper.user.ProfileUserMapper;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,10 +25,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class ChatService {
-    private final UserService userService;
     private final ChatRepository chatRepository;
+    private final UserClient userClient;
     private final ChatForMenuChatsMapper chatForMenuChatsMapper;
-    private final ProfileUserMapper profileUserMapper;
 
 
     public void save(Chat chat) {
@@ -41,12 +40,14 @@ public class ChatService {
     }
     @Cacheable(value = "participantsCache", key = "#id")
     public List<ProfileUserDto> getParticipants(long id){
-        return findChatById(id).getParticipants().stream().map(profileUserMapper::toDto).collect(Collectors.toList());
+        List<Long> participantsId = findChatById(id).getParticipantsId();
+        return participantsId.stream().map(userClient::getUserById).collect(Collectors.toList());
     }
 
-    @Cacheable(value = "chats", key = "#user.username")
-    public List<ChatForMenuChatsDto> chats(User user) {
-        List<Chat> chats =  chatRepository.findAllByParticipants(user);
+    @Cacheable(value = "chats", key = "#username")
+    public List<ChatForMenuChatsDto> getChats(String username) {
+        ProfileUserDto profileUserDto = userClient.getUserByUsername(username);
+        List<Chat> chats =  chatRepository.findAllByParticipantsId(profileUserDto.getId());
 
         chats.sort(new Comparator<Chat>() {
             @Override
@@ -65,7 +66,7 @@ public class ChatService {
 
         List<ChatForMenuChatsDto> listChatForMenuChatsDto =  chats.stream().map(chat -> {
             ChatForMenuChatsDto chatForMenuChatsDto = chatForMenuChatsMapper.toDto(chat);
-            chooseDialogName(user, chatForMenuChatsDto, chat);
+            chooseDialogName(profileUserDto, chatForMenuChatsDto, chat);
             return chatForMenuChatsDto;
         }).collect(Collectors.toList());
 
@@ -73,7 +74,7 @@ public class ChatService {
     }
 
 
-    public Chat createChat(User owner, String username, String phoneNumber, ChatForMenuChatsDto chatForMenuChatsDto) {
+    public Chat createChat(ProfileUserDto owner, String username, String phoneNumber, ChatForMenuChatsDto chatForMenuChatsDto) {
         if (chatForMenuChatsDto.getChatType().equals(ChatType.DIALOG)) {
             return createDialog(owner, username, phoneNumber);
         } else {
@@ -82,24 +83,24 @@ public class ChatService {
     }
 
 
-    public Chat createGroupChat(User owner,  ChatForMenuChatsDto chatForMenuChatsDto){
+    public Chat createGroupChat(ProfileUserDto owner,  ChatForMenuChatsDto chatForMenuChatsDto){
         Chat chat = new Chat();
 
-        if(chatForMenuChatsDto.getName().isEmpty()) {
+        if(chatForMenuChatsDto.getName() == null || chatForMenuChatsDto.getName().isEmpty()) {
             throw new ApiException("Имя группы должно быть задано обязательно", HttpStatus.BAD_REQUEST);
         }
         chat.setChatType(ChatType.GROUP);
-        chat.setParticipants(Collections.singletonList(owner));
+        chat.setParticipantsId(Collections.singletonList(owner.getId()));
         chat.setName(chatForMenuChatsDto.getName());
         save(chat);
         return chat;
     }
 
-    public Chat createDialog(User owner,
+    public Chat createDialog(ProfileUserDto owner,
                            String username, String phoneNumber){
         Chat chat = new Chat();
 
-        User userForAdd = userService.searchByUsernameOrPhoneNumber(username, phoneNumber);
+        ProfileUserDto userForAdd = userClient.getUserByUsernameOrPhoneNumber(owner.getUsername(), username, phoneNumber);
         if(userForAdd.getUsername().equals(owner.getUsername())){
             throw new ApiException("Вы не можете создать чат с собой", HttpStatus.BAD_REQUEST);
         }
@@ -107,26 +108,29 @@ public class ChatService {
             throw new ApiException("Чат с этим пользователем уже существует", HttpStatus.BAD_REQUEST);
         }
         chat.setChatType(ChatType.DIALOG);
-        chat.setParticipants(List.of(owner, userForAdd));
+        chat.setParticipantsId(List.of(owner.getId(), userForAdd.getId()));
         save(chat);
         return chat;
 
     }
 
-    public ChatForMenuChatsDto chooseDialogName(User user, ChatForMenuChatsDto chatForMenuChatsDto, Chat chat) {
+    public ChatForMenuChatsDto chooseDialogName(ProfileUserDto profileUserDto, ChatForMenuChatsDto chatForMenuChatsDto, Chat chat) {
         if (chatForMenuChatsDto.getChatType().equals(ChatType.DIALOG)) {
-            if (chat.getParticipants().get(0).getUsername().equals(user.getUsername())) {
-                chatForMenuChatsDto.setName(chat.getParticipants().get(1).getFullName());
+            ProfileUserDto participant1 = userClient.getUserById(chat.getParticipantsId().get(0));
+            ProfileUserDto participant2 = userClient.getUserById(chat.getParticipantsId().get(1));
+            if (participant1.getUsername().equals(profileUserDto.getUsername())) {
+                chatForMenuChatsDto.setName(participant2.getFullName());
             } else {
-                chatForMenuChatsDto.setName(chat.getParticipants().get(0).getFullName());
+                chatForMenuChatsDto.setName(participant1.getFullName());
             }
         }
         return chatForMenuChatsDto;
     }
 
-    public boolean findYetAddedDialogs(User owner, User participant) {
-        for(Chat chat : owner.getChats()){
-            if(chat.getParticipants().contains(participant) && chat.getChatType().equals(ChatType.DIALOG)){
+    public boolean findYetAddedDialogs(ProfileUserDto owner, ProfileUserDto participant) {
+        List<Chat> chats = chatRepository.findAllByParticipantsId(owner.getId());
+        for(Chat chat : chats){
+            if(chat.getParticipantsId().contains(participant.getId()) && chat.getChatType().equals(ChatType.DIALOG)){
                 return  true;
             }
         }
@@ -134,11 +138,11 @@ public class ChatService {
     }
 
 
-    public Chat getDefiniteChat(long id, User user){
+
+    public Chat getDefiniteChat(long id, ProfileUserDto profileUserDto){
         Chat chat = findChatById(id);
 
-
-        if(!chat.getParticipants().contains(user)){
+        if(!chat.getParticipantsId().contains(profileUserDto.getId())){
             throw new ApiException("В вашем списке чатов, нет чата с данным ID", HttpStatus.NOT_FOUND);
         }
 
@@ -152,21 +156,21 @@ public class ChatService {
         return chat;
     }
 
-    public void addParticipant(long id, String username, String phoneNumber, User principalUser) {
+    public void addParticipant(long id, String username, String phoneNumber, ProfileUserDto principalUser) {
         Chat chat = findChatById(id);
 
         if(chat.getChatType().equals(ChatType.DIALOG)){
             throw new ApiException("Добавлять людей в DIALOG нельзя", HttpStatus.BAD_REQUEST);
         }
 
-        if(!chat.getParticipants().contains(principalUser)){
+        if(!chat.getParticipantsId().contains(principalUser.getId())){
             throw new ApiException("Чат с данным id не найден в списке ваших чатов", HttpStatus.NOT_FOUND);
         }
-        User userForAdd = userService.searchByUsernameOrPhoneNumber(username, phoneNumber);
-        if(chat.getParticipants().contains(userForAdd)){
+        ProfileUserDto userForAdd = userClient.getUserByUsernameOrPhoneNumber(principalUser.getUsername(), username, phoneNumber);
+        if(chat.getParticipantsId().contains(userForAdd.getId())){
             throw new ApiException("Пользователь " + userForAdd.getUsername()+ " уже добавлен", HttpStatus.BAD_REQUEST);
         }
-        chat.getParticipants().add(userForAdd);
+        chat.getParticipantsId().add(userForAdd.getId());
         save(chat);
     }
 }

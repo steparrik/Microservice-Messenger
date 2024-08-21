@@ -9,10 +9,15 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ProfileUserDto implements Serializable {
+public class ProfileUserDto {
+    private Long id;
+
     private String username;
 
     private String phoneNumber;
 
     private String fullName;
+
+    private String pathToAvatar;
+
 }
