@@ -145,6 +145,7 @@ services:
     build:
       context: ../ApiGateway
       dockerfile: ../ApiGateway/Dockerfile
+    container_name: api
     ports:
       - "${API_SERVER_PORT}:${API_SERVER_PORT}"
     environment:
@@ -152,6 +153,7 @@ services:
 
 
   front:
+    container_name: front
     build:
       context: ../FrontendService
       dockerfile: ../FrontendService/Dockerfile

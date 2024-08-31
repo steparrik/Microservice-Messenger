@@ -116,14 +116,14 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
         }
 
         function connect() {
-            const socket = new SockJS('http://192.168.31.143:8081/ws');
+            const socket = new SockJS('http://192.168.1.171:8081/ws');
             stompClient = Stomp.over(socket);
 
             stompClient.connect({}, onConnected, onError);
         }
 
         function fetchChats() {
-            fetch('http://192.168.31.143:8086/chats', {
+            fetch('http://192.168.1.171:8086/chats', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -365,13 +365,13 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
         }
 
         function connect() {
-            const socket = new SockJS('http://192.168.31.143:8081/ws');
+            const socket = new SockJS('http://192.168.1.171:8081/ws');
             stompClient = Stomp.over(socket);
 
             stompClient.connect({}, onConnected, onError);
         }
 
-        fetch(`http://192.168.31.143:8086/chats/` + chatId, {
+        fetch(`http://192.168.1.171:8086/chats/` + chatId, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -505,7 +505,7 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
                 phoneNumber: phoneNumber,
                 fullName: fullName,
             }
-            fetch('http://192.168.31.143:8086/registration', {
+            fetch('http://192.168.1.171:8086/registration', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -538,7 +538,7 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
                 password: password
             };
 
-            fetch('http://192.168.31.143:8086/auth', {
+            fetch('http://192.168.1.171:8086/auth', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -564,7 +564,7 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
 });
 
 function getProfile() {
-    return fetch('http://192.168.31.143:8086/profile', {
+    return fetch('http://192.168.1.171:8086/profile', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -587,7 +587,7 @@ function sendMessageOnServer(chatId, text) {
     const messageText = {
         messageText: text
     }
-    return fetch('http://192.168.31.143:8086/chats/'+chatId, {
+    return fetch('http://192.168.1.171:8086/chats/'+chatId, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -612,7 +612,7 @@ function sendMessageOnServer(chatId, text) {
 
 
 function addAndGetNewDialog(nameCompanion, newChatData){
-    return fetch('http://192.168.31.143:8086/chats' +
+    return fetch('http://192.168.1.171:8086/chats' +
         '?username='+nameCompanion, {
         method: 'POST',
         headers: {
@@ -636,7 +636,7 @@ function addAndGetNewDialog(nameCompanion, newChatData){
 }
 
 async function addAndGetNewGroup(groupName){
-    return fetch('http://192.168.31.143:8086/chats', {
+    return fetch('http://192.168.1.171:8086/chats', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -658,7 +658,7 @@ async function addAndGetNewGroup(groupName){
 }
 
 function addParticipants(nameCompanion, chatId){
-    return fetch('http://192.168.31.143:8086/chats/'+chatId +
+    return fetch('http://192.168.1.171:8086/chats/'+chatId +
         '?username='+nameCompanion, {
         method: 'PUT',
         headers: {
