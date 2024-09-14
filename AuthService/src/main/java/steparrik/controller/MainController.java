@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import steparrik.dto.token.JwtResponseDto;
 import steparrik.dto.user.AuthUserDto;
 import steparrik.dto.user.EditUserDto;
 import steparrik.dto.user.RegistrationUserDto;
@@ -14,6 +15,8 @@ import steparrik.service.AuthService;
 import steparrik.service.RegistrationService;
 import steparrik.service.UserService;
 import steparrik.utils.validate.token.JwtValidate;
+
+import java.util.Map;
 
 
 @RestController
@@ -27,25 +30,24 @@ public class MainController {
 
 
     @PostMapping("/auth")
-    public ResponseEntity<?> authentication(@Valid @RequestBody AuthUserDto authRequest) {
-        return ResponseEntity.ok().body(authService.createAuthToken(authRequest));
+    public JwtResponseDto authentication(@Valid @RequestBody AuthUserDto authRequest) {
+        return authService.createAuthToken(authRequest);
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> registration(@Valid @RequestBody RegistrationUserDto registrationUserDto) {
+    public void registration(@Valid @RequestBody RegistrationUserDto registrationUserDto) {
         registrationService.registration(registrationUserDto);
-        return ResponseEntity.ok().body(null);
     }
 
     @GetMapping("/check")
-    public ResponseEntity<?> checkJwt(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
-        return ResponseEntity.ok().body(jwtValidate.checkJwt(authHeader));
+    public Map<String, String> checkJwt(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
+        return jwtValidate.checkJwt(authHeader);
     }
 
 
     @PutMapping("/editUser")
-    public ResponseEntity<?> editProfile(@Valid@RequestBody EditUserDto editUserDto, @RequestHeader(value = "X-Username", required = true) String username) {
-        return ResponseEntity.ok().body(userService.editUser(editUserDto, username));
+    public JwtResponseDto editProfile(@Valid@RequestBody EditUserDto editUserDto, @RequestHeader(value = "X-Username", required = true) String username) {
+        return userService.editUser(editUserDto, username);
     }
 
 

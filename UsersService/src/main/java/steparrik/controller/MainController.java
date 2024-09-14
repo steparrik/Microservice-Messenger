@@ -16,7 +16,7 @@ public class MainController {
     private final ProfileUserMapper profileUserMapper;
 
     @GetMapping("/profile")
-    public ResponseEntity<?> profile(@RequestHeader(value = "X-Username") String principalUsername,
+    public ProfileUserDto profile(@RequestHeader(value = "X-Username") String principalUsername,
                                      @RequestParam(required = false)String username,
                                      @RequestParam(required = false) String phoneNumber) {
         User user;
@@ -25,20 +25,20 @@ public class MainController {
         }else{
             user = userService.findByUsernameOrPhoneNumber(username, phoneNumber);
         }
-        return ResponseEntity.ok().body(profileUserMapper.toDto(user));
+        return profileUserMapper.toDto(user);
     }
 
 
     @PostMapping("/addAvatar")
-    public ResponseEntity<?> photo(@RequestParam("file") MultipartFile file,
+    public String photo(@RequestParam("file") MultipartFile file,
                                    @RequestHeader(value = "X-Username") String username) {
-         return ResponseEntity.ok().body(userService.uploadAvatar(username, file));
+         return userService.uploadAvatar(username, file);
     }
 
     @GetMapping("/profile/{id}")
-    public ResponseEntity<?> profile(@PathVariable Long id) {
+    public ProfileUserDto profile(@PathVariable Long id) {
         User user =  userService.findById(id);
-        return ResponseEntity.ok().body(profileUserMapper.toDto(user));
+        return profileUserMapper.toDto(user);
     }
 
 

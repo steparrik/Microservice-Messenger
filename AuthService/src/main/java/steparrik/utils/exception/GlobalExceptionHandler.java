@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ExceptionEntity> handleValidationExceptions(MethodArgumentNotValidException ex) {
         LocalDateTime nowTime = LocalDateTime.now();
         List<ExceptionEntity> errors = ex.getBindingResult()
                 .getAllErrors()
@@ -26,11 +26,11 @@ public class GlobalExceptionHandler {
                 })
                 .collect(Collectors.toList());
 
-        return ResponseEntity.badRequest().body(errors);
+        return ResponseEntity.badRequest().body(errors.get(0));
     }
 
     @ExceptionHandler(ApiException.class)
-    public ResponseEntity<?> handleValidationExceptions(ApiException ex) {
+    public ResponseEntity<ExceptionEntity> handleValidationExceptions(ApiException ex) {
         ExceptionEntity exceptionEntity = new ExceptionEntity();
         exceptionEntity.setMessage(ex.getMessage());
         exceptionEntity.setLocalDateTime(ex.getTimestamp());
