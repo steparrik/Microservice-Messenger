@@ -49,20 +49,17 @@ public class ChatService {
         ProfileUserDto profileUserDto = userClient.getUserByUsername(username);
         List<Chat> chats =  chatRepository.findAllByParticipantsId(profileUserDto.getId());
 
-        chats.sort(new Comparator<Chat>() {
-            @Override
-            public int compare(Chat o1, Chat o2) {
+
+        chats.sort((o1, o2) -> {
                 if (o1.getMessages() == null || o1.getMessages().isEmpty()) {
                     return (o2.getMessages() == null || o2.getMessages().isEmpty()) ? 0 : 1;
                 }
-
                 if (o2.getMessages() == null || o2.getMessages().isEmpty()) {
                     return -1;
                 }
-
                 return o2.getMessages().get(o2.getMessages().size()-1).getTimestamp().compareTo(o1.getMessages().get(o1.getMessages().size()-1).getTimestamp());
-            }
         });
+
 
         List<ChatForMenuChatsDto> listChatForMenuChatsDto =  chats.stream().map(chat -> {
             ChatForMenuChatsDto chatForMenuChatsDto = chatForMenuChatsMapper.toDto(chat);
