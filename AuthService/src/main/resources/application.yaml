@@ -2,7 +2,10 @@ server:
   port: ${SERVER_PORT}
 jwt:
   secret: ${JWT_SECRET}
-  lifetime: ${JWT_LIFE}
+  access:
+    lifetime: ${JWT_ACCESS_LIFE}
+  refresh:
+    lifetime: ${JWT_REFRESH_LIFE}
 spring:
   application:
     name: AuthService

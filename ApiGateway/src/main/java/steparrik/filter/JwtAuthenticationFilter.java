@@ -34,7 +34,8 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
             String method = request.getMethod().toString();
 
             if (("/auth".equals(path) && "POST".equalsIgnoreCase(method)) ||
-                    ("/registration".equals(path) && "POST".equalsIgnoreCase(method))) {
+                    ("/registration".equals(path) && "POST".equalsIgnoreCase(method)) ||
+                    ("/refresh".equals(path) && "POST".equalsIgnoreCase(method))) {
                 return chain.filter(exchange);
             }
 

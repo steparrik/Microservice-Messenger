@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import steparrik.dto.token.JwtResponseDto;
+import steparrik.dto.token.JwtDto;
 import steparrik.dto.user.EditUserDto;
 import steparrik.dto.user.EditUserKafkaDto;
 import steparrik.model.user.User;
@@ -41,7 +41,7 @@ public class UserService {
     }
 
 
-    public JwtResponseDto editUser(EditUserDto editUserDto, String username) {
+    public JwtDto editUser(EditUserDto editUserDto, String username) {
         EditUserKafkaDto editUserKafkaDto = new EditUserKafkaDto();
         editUserKafkaDto.setOldUsername(username);
         User user = findUserByUsername(username);
@@ -64,8 +64,10 @@ public class UserService {
         producerService.edit(editUserKafkaDto);
         save(user);
         UserDetails userDetails = userDetailService.loadUserByUsername(user.getUsername());
-        String token = jwtTokenUtil.generateToken(userDetails);
-        return new JwtResponseDto(token);
+        String accessToken = jwtTokenUtil.generateAccessToken(userDetails);
+        String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
+        return new JwtDto(accessToken, refreshToken);
+
     }
 
 }

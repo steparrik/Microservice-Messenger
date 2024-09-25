@@ -99,7 +99,8 @@ services:
       server.port: ${AUTH_SERVER_PORT}
       KAFKA_BOOTSTRAP_SERVER: ${KAFKA_BOOTSTRAP_SERVER}
       jwt.secret: ${JWT_SECRET}
-      JWT_LIFE: ${JWT_LIFE}
+      JWT_ACCESS_LIFE: ${JWT_ACCESS_LIFE}
+      JWT_REFRESH_LIFE: ${JWT_REFRESH_LIFE}
     depends_on:
       - postgres
 

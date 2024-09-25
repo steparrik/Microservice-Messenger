@@ -14,7 +14,8 @@ const profileData = document.querySelector("#profileData")
 const forImg = document.querySelector("#forImg")
 let stompClient;
 const currentPath = window.location.pathname;
-const jwt = localStorage.getItem("jwt");
+let acToken = localStorage.getItem("accessToken");
+let rToken = localStorage.getItem("refreshToken");
 const error = document.querySelector("#error-name")
 const addNewParticipant = document.querySelector("#addNewParticipant")
 const addParticipant = document.querySelector("#addParticipant")
@@ -22,13 +23,12 @@ const addParticipant = document.querySelector("#addParticipant")
 
 
 document.addEventListener('DOMContentLoaded',  async function (event) {
-    if (jwt && await getProfile() === 401) {
-        localStorage.removeItem("jwt")
-        window.location.href = '/auth';
+    if (acToken && await getProfile() === 500) {
+        await doRefreshToken()
     }
-    else if (!jwt && currentPath !== '/register' && currentPath !== '/auth') {
+    else if (!acToken && currentPath !== '/register' && currentPath !== '/auth') {
         window.location.href = '/auth';
-    } else if (jwt && (currentPath === '/register' || currentPath === '/auth')) {
+    } else if (acToken && (currentPath === '/register' || currentPath === '/auth')) {
         window.location.href = '/chats';
     }
 
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem("jwt")
+                    'Authorization': 'Bearer ' + localStorage.getItem("accessToken")
                 }
             })
                 .then(response => {
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
             }
         });
 
-        if (localStorage.getItem("jwt")) {
+        if (localStorage.getItem("accessToken")) {
             connect();
         } else {
             chatList.innerHTML = '<li>Вы не авторизованы</li>';
@@ -316,7 +316,7 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
         function onMessageReceived(payload) {
             const message = JSON.parse(payload.body);
             console.log(message.sender.username)
-            const jwtPayload = parseJwt(localStorage.getItem("jwt"));
+            const jwtPayload = parseJwt(localStorage.getItem("accessToken"));
             const jwtUsername = jwtPayload.sub
 
             const messageContainer = document.createElement('div');
@@ -375,7 +375,7 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem("jwt")
+                'Authorization': 'Bearer ' + localStorage.getItem("accessToken")
             }
         })
             .then(response => {
@@ -401,7 +401,7 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
                     chatName.appendChild(name);
                     messageArea.innerHTML = '';
                     data.messages.forEach(message => {
-                        const jwtPayload = parseJwt(localStorage.getItem("jwt"));
+                        const jwtPayload = parseJwt(localStorage.getItem("accessToken"));
                         const jwtUsername = jwtPayload.sub
 
                         const listItem = document.createElement('li');
@@ -483,7 +483,8 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
 
 
             profilePage.addEventListener("submit", function (event) {
-                    localStorage.removeItem("jwt")
+                    localStorage.removeItem("accessToken")
+                    localStorage.removeItem("refreshToken")
                 }
             )
     }
@@ -554,7 +555,8 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
                 })
                 .then(data => {
                     console.log(data);
-                    localStorage.setItem("jwt", data.token);
+                    localStorage.setItem("refreshToken", data.refreshToken);
+                    localStorage.setItem("accessToken", data.accessToken);
                     window.location.href = "/chats"
                 });
         });
@@ -568,7 +570,7 @@ function getProfile() {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + localStorage.getItem("jwt")
+            'Authorization': 'Bearer ' + localStorage.getItem("accessToken")
         }
     })
         .then(response => {
@@ -582,6 +584,32 @@ function getProfile() {
         });
 }
 
+function doRefreshToken(){
+     let jwtDto = {
+        accessToken: acToken,
+        refreshToken: rToken
+    }
+    return fetch('http://localhost:8086/refresh', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(jwtDto)
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.status;
+            }
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("accessToken");
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            localStorage.setItem("refreshToken", data.refreshToken);
+            localStorage.setItem("accessToken", data.accessToken);
+        });
+}
 
 function sendMessageOnServer(chatId, text) {
     const messageText = {
@@ -591,7 +619,7 @@ function sendMessageOnServer(chatId, text) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + localStorage.getItem("jwt")
+            'Authorization': 'Bearer ' + localStorage.getItem("accessToken")
         },
         body: JSON.stringify(messageText)
     })
@@ -617,7 +645,7 @@ function addAndGetNewDialog(nameCompanion, newChatData){
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + localStorage.getItem("jwt")
+            'Authorization': 'Bearer ' + localStorage.getItem("accessToken")
         }, body: newChatData
     })
         .then(async response => {
@@ -640,7 +668,7 @@ async function addAndGetNewGroup(groupName){
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + localStorage.getItem("jwt")
+            'Authorization': 'Bearer ' + localStorage.getItem("accessToken")
         },body:groupName
     })
         .then(async response => {
@@ -663,7 +691,7 @@ function addParticipants(nameCompanion, chatId){
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + localStorage.getItem("jwt")
+            'Authorization': 'Bearer ' + localStorage.getItem("accessToken")
         }
     })
         .then(async response => {

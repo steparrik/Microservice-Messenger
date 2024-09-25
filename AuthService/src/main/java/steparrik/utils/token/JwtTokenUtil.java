@@ -16,13 +16,27 @@ public class JwtTokenUtil {
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.lifetime}")
-    private Duration jwtLifetime;
+    @Value("${jwt.access.lifetime}")
+    private Duration jwtAccessLifetime;
+
+    @Value("${jwt.refresh.lifetime}")
+    private Duration jwtRefreshLifetime;
 
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateAccessToken(UserDetails userDetails) {
         Date issuedDate = new Date();
-        Date expiredDate = new Date(issuedDate.getTime() + jwtLifetime.toMillis());
+        Date expiredDate = new Date(issuedDate.getTime() + jwtAccessLifetime.toMillis());
+        return Jwts.builder()
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(issuedDate)
+                .setExpiration(expiredDate)
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
+    }
+
+    public String generateRefreshToken(UserDetails userDetails) {
+        Date issuedDate = new Date();
+        Date expiredDate = new Date(issuedDate.getTime() + jwtRefreshLifetime.toMillis());
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(issuedDate)
@@ -35,12 +49,12 @@ public class JwtTokenUtil {
         return getAllClaimsFromToken(token).getSubject();
     }
 
-    private Claims getAllClaimsFromToken(String token) {
+    public Claims getAllClaimsFromToken(String token) {
         return Jwts.parser()
                 .setSigningKey(secret)
                 .parseClaimsJws(token)
                 .getBody();
-
-
     }
+
+
 }

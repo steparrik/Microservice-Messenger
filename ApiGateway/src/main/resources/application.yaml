@@ -65,6 +65,11 @@ spring:
           predicates:
             - Path=/editUser
             - Method=PUT
+        - id: refresh-token
+          uri: http://auth:8089
+          predicates:
+            - Path=/refresh
+            - Method=POST
 
 server:
   port: ${SERVER_PORT}
