@@ -28,10 +28,5 @@ public class User {
     @Column(unique = true)
     private String phoneNumber;
 
-
-    public User(String password, String username) {
-        this.password = password;
-        this.username = username;
-    }
 }
 

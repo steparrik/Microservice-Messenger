@@ -11,16 +11,14 @@ import steparrik.dto.user.RegistrationUserDto;
 @RequiredArgsConstructor
 @Slf4j
 public class ProducerService {
-    private final KafkaTemplate<String, RegistrationUserDto> kafkaTemplateSave;
-    private final KafkaTemplate<String, EditUserKafkaDto> kafkaTemplateEdit;
-
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public void save(RegistrationUserDto registrationUserDto) {
-        kafkaTemplateSave.send("save-topic", registrationUserDto);
+        kafkaTemplate.send("save-topic", registrationUserDto);
     }
 
     public void edit(EditUserKafkaDto editUserKafkaDto) {
-        kafkaTemplateEdit.send("edit-topic", editUserKafkaDto);
+        kafkaTemplate.send("edit-topic", editUserKafkaDto);
     }
 
 
