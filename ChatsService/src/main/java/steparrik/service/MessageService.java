@@ -1,7 +1,10 @@
 package steparrik.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import steparrik.dto.analytics.VisitTimeDto;
 import steparrik.dto.message.MessageDTO;
 import steparrik.dto.user.ProfileUserDto;
 import steparrik.model.chat.Chat;
@@ -17,7 +20,7 @@ import java.time.LocalDateTime;
 public class MessageService {
     private final MessageRepository messageRepository;
     private final ChatService chatService;
-
+    private static final ObjectMapper objectMapper = new ObjectMapper();
     private final MessageMapper messageMapper;
 
     private final ProducerService producerService;
@@ -40,6 +43,8 @@ public class MessageService {
         messageDto.setChatType(chat.getChatType());
         messageDto.setChatId(chat.getId());
         producerService.sendMessage(messageDto);
+        VisitTimeDto visitTimeDto = new VisitTimeDto(sender.getId(), LocalDateTime.now());
+        producerService.sendTimeToAnalyticsService(visitTimeDto);
         return messageDto;
     }
 }

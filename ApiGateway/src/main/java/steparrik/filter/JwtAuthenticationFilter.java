@@ -1,5 +1,6 @@
 package steparrik.filter;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -56,10 +57,9 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
                     .retrieve()
                     .bodyToMono(Map.class)
                     .flatMap(userDetails -> {
-                        if(userDetails.keySet().contains("error")){
+                        if(userDetails.containsKey("error")){
                             return Mono.error(new RuntimeException(userDetails.get("error").toString()));
                         }else {
-                            System.out.println(userDetails.get("username").toString());
                             ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
                                     .header("X-Username", userDetails.get("username").toString())
                                     .build();

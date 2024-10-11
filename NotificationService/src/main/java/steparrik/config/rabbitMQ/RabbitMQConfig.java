@@ -1,4 +1,4 @@
-package steparrik.config;
+package steparrik.config.rabbitMQ;
 
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
