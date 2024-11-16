@@ -27,35 +27,50 @@ services:
       KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
 
-
-  kafka-connect:
-    image: confluentinc/cp-kafka-connect:latest
+  kafka_2:
+    image: wurstmeister/kafka
+    restart: on-failure
+    container_name: kafka_2
     ports:
-      - "8083:8083"
+      - "9094:9094"
     environment:
-      CONNECT_BOOTSTRAP_SERVERS: "kafka:9092"
-      CONNECT_REST_ADVERTISED_HOST_NAME: "kafka"
-      CONNECT_GROUP_ID: "kafka-connect-group"
-      CONNECT_CONFIG_STORAGE_TOPIC: "connect-configs"
-      CONNECT_OFFSET_STORAGE_TOPIC: "connect-offsets"
-      CONNECT_STATUS_STORAGE_TOPIC: "connect-status"
-      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
-    depends_on:
-      - kafka
-    volumes:
-      - ./postgresql-42.7.4.jar:/usr/share/java/kafka/postgresql-42.7.4.jar
-      - ./kafka-connect-jdbc-10.8.0.jar:/usr/share/java/kafka/kafka-connect-jdbc-10.8.0.jar
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka_2:9094,OUTSIDE://localhost:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9094,OUTSIDE://0.0.0.0:9095
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+
+
+
+ # kafka-connect:
+  #  image: confluentinc/cp-kafka-connect:latest
+   # ports:
+   #   - "8083:8083"
+   # environment:
+    #  CONNECT_BOOTSTRAP_SERVERS: "kafka:9092"
+     # CONNECT_REST_ADVERTISED_HOST_NAME: "kafka"
+      #CONNECT_GROUP_ID: "kafka-connect-group"
+      #CONNECT_CONFIG_STORAGE_TOPIC: "connect-configs"
+      #CONNECT_OFFSET_STORAGE_TOPIC: "connect-offsets"
+      #ONNECT_STATUS_STORAGE_TOPIC: "connect-status"
+      #CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      #CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      #INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      #INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      #CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      #CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      #CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+    #depends_on:
+    #  - kafka
+    #volumes:
+     # - ./postgresql-42.7.4.jar:/usr/share/java/kafka/postgresql-42.7.4.jar
+     # - ./kafka-connect-jdbc-10.8.0.jar:/usr/share/java/kafka/kafka-connect-jdbc-10.8.0.jar
 
   postgres:
-    image: postgres:13
+    image: postgres:latest
     container_name: postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -109,7 +124,7 @@ services:
       RABBIT_PASSWORD: ${RABBIT_PASSWORD}
       RABBIT_V_HOST: ${RABBIT_V_HOST}
       SERVER_PORT: ${NOTIFICATION_SERVER_PORT}
-      KAFKA_BOOTSTRAP_SERVER: ${KAFKA_BOOTSTRAP_SERVER}
+      KAFKA_BOOTSTRAP_SERVER: ${KAFKA_BOOTSTRAP_SERVER_CONSUMER}
     depends_on:
       - rabbitmq
       - postgres
@@ -164,7 +179,7 @@ services:
       spring.datasource.username: ${POSTGRES_USER}
       spring.datasource.password: ${POSTGRES_PASSWORD}
       server.port: ${USERS_SERVER_PORT}
-      KAFKA_BOOTSTRAP_SERVER: ${KAFKA_BOOTSTRAP_SERVER}
+      KAFKA_BOOTSTRAP_SERVER: ${KAFKA_BOOTSTRAP_SERVER_CONSUMER}
       NAME_BUCKET: ${NAME_BUCKET}
       PATH_TO_DEFAULT_AVATAR: ${PATH_TO_DEFAULT_AVATAR}
     depends_on:
