@@ -124,7 +124,7 @@ services:
       RABBIT_PASSWORD: ${RABBIT_PASSWORD}
       RABBIT_V_HOST: ${RABBIT_V_HOST}
       SERVER_PORT: ${NOTIFICATION_SERVER_PORT}
-      KAFKA_BOOTSTRAP_SERVER: ${KAFKA_BOOTSTRAP_SERVER_CONSUMER}
+      KAFKA_BOOTSTRAP_SERVER_CONSUMER: ${KAFKA_BOOTSTRAP_SERVER_CONSUMER}
     depends_on:
       - rabbitmq
       - postgres
@@ -179,7 +179,7 @@ services:
       spring.datasource.username: ${POSTGRES_USER}
       spring.datasource.password: ${POSTGRES_PASSWORD}
       server.port: ${USERS_SERVER_PORT}
-      KAFKA_BOOTSTRAP_SERVER: ${KAFKA_BOOTSTRAP_SERVER_CONSUMER}
+      KAFKA_BOOTSTRAP_SERVER_CONSUMER: ${KAFKA_BOOTSTRAP_SERVER_CONSUMER}
       NAME_BUCKET: ${NAME_BUCKET}
       PATH_TO_DEFAULT_AVATAR: ${PATH_TO_DEFAULT_AVATAR}
     depends_on:
@@ -202,7 +202,7 @@ services:
       context: ../FrontendService
       dockerfile: ../FrontendService/Dockerfile
     ports:
-      - "8082:8082"
+      - "3000:3000"
 volumes:
   pgdata:
   rabbitmq_data:

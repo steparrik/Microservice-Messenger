@@ -25,4 +25,4 @@ spring:
     hibernate:
       ddl-auto: update
 kafka:
-  bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER}
+  bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER_CONSUMER}
