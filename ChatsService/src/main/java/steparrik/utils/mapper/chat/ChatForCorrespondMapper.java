@@ -4,9 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import steparrik.client.UserClient;
 import steparrik.dto.chat.ChatForCorrespondDto;
+import steparrik.dto.message.MessageDTO;
 import steparrik.model.chat.Chat;
+import steparrik.model.message.Message;
+import steparrik.service.MessageService;
 import steparrik.utils.mapper.message.MessageMapper;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -14,6 +18,7 @@ import java.util.stream.Collectors;
 public class ChatForCorrespondMapper {
     private final MessageMapper messageMapper;
     private final UserClient userClient;
+    private final MessageService messageService;
 
 
     public ChatForCorrespondDto toDto(Chat e) {
@@ -27,7 +32,10 @@ public class ChatForCorrespondMapper {
         chatForCorrespondDto.setName( e.getName() );
         chatForCorrespondDto.setParticipants(e.getParticipantsId().stream().map(userClient::getUserById).collect(Collectors.toList()));
         chatForCorrespondDto.setChatType( e.getChatType() );
-        chatForCorrespondDto.setMessages(e.getMessages().stream().map(messageMapper::toDto).collect(Collectors.toList()));
+        chatForCorrespondDto.setMessages(e.getMessagesId().stream().map(m -> {
+            Message message = messageService.findById(m);
+            return messageMapper.toDto(message, chatForCorrespondDto.getChatType());
+        }).collect(Collectors.toList()));
 
         return chatForCorrespondDto;
     }

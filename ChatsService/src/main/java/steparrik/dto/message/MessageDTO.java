@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageDTO {
-    private Long id;
+    private String id;
 
     @NotEmpty(message = "Текст сообщения не может быть пустым")
     private String messageText;

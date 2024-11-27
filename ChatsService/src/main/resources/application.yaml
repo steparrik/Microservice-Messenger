@@ -19,5 +19,13 @@ spring:
     redis:
         host: ${REDIS_HOST}
         port: ${REDIS_PORT}
+    mongodb:
+      authentication-database: admin
+      database: messages_db
+      username: rootuser
+      password: rootpass
+      port: 27017
+      host: mongo
+
 kafka:
   bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER}

@@ -13,9 +13,11 @@ import steparrik.model.chat.Chat;
 import steparrik.model.chat.ChatType;
 import steparrik.model.message.Message;
 import steparrik.repository.ChatRepository;
+import steparrik.repository.MessageRepository;
 import steparrik.utils.exception.ApiException;
 import steparrik.utils.mapper.chat.ChatForMenuChatsMapper;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -49,16 +51,6 @@ public class ChatService {
         ProfileUserDto profileUserDto = userClient.getUserByUsername(username);
         List<Chat> chats =  chatRepository.findAllByParticipantsId(profileUserDto.getId());
 
-
-        chats.sort((o1, o2) -> {
-                if (o1.getMessages() == null || o1.getMessages().isEmpty()) {
-                    return (o2.getMessages() == null || o2.getMessages().isEmpty()) ? 0 : 1;
-                }
-                if (o2.getMessages() == null || o2.getMessages().isEmpty()) {
-                    return -1;
-                }
-                return o2.getMessages().get(o2.getMessages().size()-1).getTimestamp().compareTo(o1.getMessages().get(o1.getMessages().size()-1).getTimestamp());
-        });
 
 
         List<ChatForMenuChatsDto> listChatForMenuChatsDto =  chats.stream().map(chat -> {
@@ -142,13 +134,6 @@ public class ChatService {
         if(!chat.getParticipantsId().contains(profileUserDto.getId())){
             throw new ApiException("В вашем списке чатов, нет чата с данным ID", HttpStatus.NOT_FOUND);
         }
-
-        chat.getMessages().sort(new Comparator<Message>() {
-            @Override
-            public int compare(Message o1, Message o2) {
-                return o1.getTimestamp().compareTo(o2.getTimestamp());
-            }
-        });
 
         return chat;
     }

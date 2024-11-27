@@ -31,7 +31,7 @@ public class Chat {
     @Column(nullable = false)
     private ChatType chatType;
 
-    @OneToMany(mappedBy = "chat")
-    private List<Message> messages;
+    @ElementCollection
+    private List<String> messagesId;
 
 }

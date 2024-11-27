@@ -1,33 +1,29 @@
 package steparrik.model.message;
 
-import jakarta.persistence.*;
-import lombok.*;
-import steparrik.model.chat.Chat;
-
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "messages")
-@ToString
+@Document(collection = "messages")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Message{
+public class Message {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false)
     private String messageText;
-
-    @Column(nullable = false)
     private LocalDateTime timestamp;
-
     private Long senderId;
 
-    @ManyToOne
-    @JoinColumn(name = "chat_id", referencedColumnName = "id")
-    private Chat chat;
+    private Long chatId;
+
 }
+
+
