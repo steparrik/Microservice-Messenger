@@ -36,7 +36,8 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
 
             if (("/auth".equals(path) && "POST".equalsIgnoreCase(method)) ||
                     ("/registration".equals(path) && "POST".equalsIgnoreCase(method)) ||
-                    ("/refresh".equals(path) && "POST".equalsIgnoreCase(method))) {
+                    ("/refresh".equals(path) && "POST".equalsIgnoreCase(method)) ||
+                    (path.contains("/v1/api") && "GET".equalsIgnoreCase(method))) {
                 return chain.filter(exchange);
             }
 

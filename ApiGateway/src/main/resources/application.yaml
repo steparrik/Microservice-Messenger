@@ -8,6 +8,27 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
+        - id: chats-documentation
+          uri: http://chats:8085
+          predicates:
+            - Path=/v1/api/chats
+            - Method=GET
+          filters:
+            - RewritePath=/v1/api/chats, /v3/api-docs
+        - id: users-documentation
+          uri: http://users:8084
+          predicates:
+            - Path=/v1/api/users
+            - Method=GET
+          filters:
+            - RewritePath=/v1/api/users, /v3/api-docs
+        - id: auth-documentation
+          uri: http://auth:8089
+          predicates:
+            - Path=/v1/api/auth
+            - Method=GET
+          filters:
+            - RewritePath=/v1/api/auth, /v3/api-docs
         - id: create-chat
           uri: http://chats:8085
           predicates:
