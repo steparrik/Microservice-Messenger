@@ -19,8 +19,6 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class MessageService {
     private final MessageRepository messageRepository;
-    private final ChatService chatService;
-    private static final ObjectMapper objectMapper = new ObjectMapper();
     private final MessageMapper messageMapper;
 
     private final ProducerService producerService;

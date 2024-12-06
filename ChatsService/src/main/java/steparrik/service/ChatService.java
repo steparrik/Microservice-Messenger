@@ -14,6 +14,7 @@ import steparrik.model.chat.ChatType;
 import steparrik.model.message.Message;
 import steparrik.repository.ChatRepository;
 import steparrik.utils.exception.ApiException;
+import steparrik.utils.jwt.JWTVerification;
 import steparrik.utils.mapper.chat.ChatForMenuChatsMapper;
 
 import java.util.Collections;
@@ -28,6 +29,7 @@ public class ChatService {
     private final ChatRepository chatRepository;
     private final UserClient userClient;
     private final ChatForMenuChatsMapper chatForMenuChatsMapper;
+    private final JWTVerification jwtVerification;
 
 
     public void save(Chat chat) {
@@ -44,9 +46,9 @@ public class ChatService {
         return participantsId.stream().map(userClient::getUserById).collect(Collectors.toList());
     }
 
-    @Cacheable(value = "chats", key = "#username")
-    public List<ChatForMenuChatsDto> getChats(String username) {
-        ProfileUserDto profileUserDto = userClient.getUserByUsername(username);
+//    @Cacheable(value = "chats", key = "#username") due to the fact that I changed the format and now I’m transferring a token, fixed later
+    public List<ChatForMenuChatsDto> getChats(String authData) {
+        ProfileUserDto profileUserDto = userClient.getUserByUsername(authData);
         List<Chat> chats =  chatRepository.findAllByParticipantsId(profileUserDto.getId());
 
 
@@ -63,7 +65,7 @@ public class ChatService {
 
         List<ChatForMenuChatsDto> listChatForMenuChatsDto =  chats.stream().map(chat -> {
             ChatForMenuChatsDto chatForMenuChatsDto = chatForMenuChatsMapper.toDto(chat);
-            chooseDialogName(profileUserDto, chatForMenuChatsDto, chat);
+            chooseDialogName(authData, chatForMenuChatsDto, chat);
             return chatForMenuChatsDto;
         }).collect(Collectors.toList());
 
@@ -71,18 +73,18 @@ public class ChatService {
     }
 
 
-    public Chat createChat(ProfileUserDto owner, String username, String phoneNumber, ChatForMenuChatsDto chatForMenuChatsDto) {
+    public Chat createChat(String authData, String username, String phoneNumber, ChatForMenuChatsDto chatForMenuChatsDto) {
         if (chatForMenuChatsDto.getChatType().equals(ChatType.DIALOG)) {
-            return createDialog(owner, username, phoneNumber);
+            return createDialog(authData, username, phoneNumber);
         } else {
-            return createGroupChat(owner, chatForMenuChatsDto);
+            return createGroupChat(authData, chatForMenuChatsDto);
         }
     }
 
 
-    public Chat createGroupChat(ProfileUserDto owner,  ChatForMenuChatsDto chatForMenuChatsDto){
+    public Chat createGroupChat(String authData,  ChatForMenuChatsDto chatForMenuChatsDto){
         Chat chat = new Chat();
-
+        ProfileUserDto owner = userClient.getUserByUsername(jwtVerification.getUsernameFromJwt(authData));
         if(chatForMenuChatsDto.getName() == null || chatForMenuChatsDto.getName().isEmpty()) {
             throw new ApiException("Имя группы должно быть задано обязательно", HttpStatus.BAD_REQUEST);
         }
@@ -93,10 +95,10 @@ public class ChatService {
         return chat;
     }
 
-    public Chat createDialog(ProfileUserDto owner,
+    public Chat createDialog(String authData,
                            String username, String phoneNumber){
         Chat chat = new Chat();
-
+        ProfileUserDto owner = userClient.getUserByUsername(authData);
         ProfileUserDto userForAdd = userClient.getUserByUsernameOrPhoneNumber(owner.getUsername(), username, phoneNumber);
         if(userForAdd.getUsername().equals(owner.getUsername())){
             throw new ApiException("Вы не можете создать чат с собой", HttpStatus.BAD_REQUEST);
@@ -111,7 +113,8 @@ public class ChatService {
 
     }
 
-    public ChatForMenuChatsDto chooseDialogName(ProfileUserDto profileUserDto, ChatForMenuChatsDto chatForMenuChatsDto, Chat chat) {
+    public ChatForMenuChatsDto chooseDialogName(String authData, ChatForMenuChatsDto chatForMenuChatsDto, Chat chat) {
+        ProfileUserDto profileUserDto = userClient.getUserByUsername(authData);
         if (chatForMenuChatsDto.getChatType().equals(ChatType.DIALOG)) {
             ProfileUserDto participant1 = userClient.getUserById(chat.getParticipantsId().get(0));
             ProfileUserDto participant2 = userClient.getUserById(chat.getParticipantsId().get(1));
@@ -153,9 +156,9 @@ public class ChatService {
         return chat;
     }
 
-    public void addParticipant(long id, String username, String phoneNumber, ProfileUserDto principalUser) {
+    public void addParticipant(long id, String username, String phoneNumber, String authData) {
         Chat chat = findChatById(id);
-
+        ProfileUserDto principalUser = userClient.getUserByUsername(authData);
         if(chat.getChatType().equals(ChatType.DIALOG)){
             throw new ApiException("Добавлять людей в DIALOG нельзя", HttpStatus.BAD_REQUEST);
         }
@@ -163,7 +166,7 @@ public class ChatService {
         if(!chat.getParticipantsId().contains(principalUser.getId())){
             throw new ApiException("Чат с данным id не найден в списке ваших чатов", HttpStatus.NOT_FOUND);
         }
-        ProfileUserDto userForAdd = userClient.getUserByUsernameOrPhoneNumber(principalUser.getUsername(), username, phoneNumber);
+        ProfileUserDto userForAdd = userClient.getUserByUsernameOrPhoneNumber(authData, username, phoneNumber);
         if(chat.getParticipantsId().contains(userForAdd.getId())){
             throw new ApiException("Пользователь " + userForAdd.getUsername()+ " уже добавлен", HttpStatus.BAD_REQUEST);
         }

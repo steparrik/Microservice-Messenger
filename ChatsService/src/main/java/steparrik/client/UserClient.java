@@ -1,6 +1,7 @@
 package steparrik.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,10 +17,10 @@ public interface UserClient {
     ProfileUserDto getUserById(@PathVariable("id") Long id);
 
     @GetMapping("/profile")
-    ProfileUserDto getUserByUsername(@RequestHeader("X-Username")String username);
+    ProfileUserDto getUserByUsername(@RequestHeader(HttpHeaders.AUTHORIZATION)String authData);
 
     @GetMapping("/profile")
-    ProfileUserDto getUserByUsernameOrPhoneNumber(@RequestHeader("X-Username")String principalUsername,
+    ProfileUserDto getUserByUsernameOrPhoneNumber(@RequestHeader(HttpHeaders.AUTHORIZATION)String authData,
                                                   @RequestParam("username")String username,
                                                   @RequestParam("phoneNumber")String phoneNumber);
 }

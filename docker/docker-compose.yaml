@@ -161,6 +161,7 @@ services:
       KAFKA_BOOTSTRAP_SERVER: ${KAFKA_BOOTSTRAP_SERVER}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
+      jwt.secret: ${JWT_SECRET}
     depends_on:
       - postgres
       - redis
@@ -179,7 +180,7 @@ services:
       spring.datasource.username: ${POSTGRES_USER}
       spring.datasource.password: ${POSTGRES_PASSWORD}
       server.port: ${USERS_SERVER_PORT}
-      KAFKA_BOOTSTRAP_SERVER: ${KAFKA_BOOTSTRAP_SERVER_CONSUMER}
+      KAFKA_BOOTSTRAP_SERVER_CONSUMER: ${KAFKA_BOOTSTRAP_SERVER_CONSUMER}
       NAME_BUCKET: ${NAME_BUCKET}
       PATH_TO_DEFAULT_AVATAR: ${PATH_TO_DEFAULT_AVATAR}
     depends_on:

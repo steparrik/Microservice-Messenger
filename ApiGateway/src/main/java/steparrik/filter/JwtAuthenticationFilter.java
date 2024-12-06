@@ -61,7 +61,6 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
                             return Mono.error(new RuntimeException(userDetails.get("error").toString()));
                         }else {
                             ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
-                                    .header("X-Username", userDetails.get("username").toString())
                                     .build();
                             ServerWebExchange mutatedExchange = exchange.mutate().request(mutatedRequest).build();
                             return chain.filter(mutatedExchange);
