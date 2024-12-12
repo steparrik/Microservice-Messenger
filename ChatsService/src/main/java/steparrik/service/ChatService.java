@@ -3,6 +3,7 @@ package steparrik.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.protocol.types.Field;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,7 @@ public class ChatService {
         return participantsId.stream().map(userClient::getUserById).collect(Collectors.toList());
     }
 
-//    @Cacheable(value = "chats", key = "#username") due to the fact that I changed the format and now I’m transferring a token, fixed later
+    @Cacheable(value = "chats", key = "#authData")
     public List<ChatForMenuChatsDto> getChats(String authData) {
         ProfileUserDto profileUserDto = userClient.getUserByUsername(authData);
         List<Chat> chats =  chatRepository.findAllByParticipantsId(profileUserDto.getId());
@@ -72,7 +73,7 @@ public class ChatService {
         return listChatForMenuChatsDto;
     }
 
-
+    @CacheEvict(value = "chats", key = "#authData")
     public Chat createChat(String authData, String username, String phoneNumber, ChatForMenuChatsDto chatForMenuChatsDto) {
         if (chatForMenuChatsDto.getChatType().equals(ChatType.DIALOG)) {
             return createDialog(authData, username, phoneNumber);
@@ -84,7 +85,7 @@ public class ChatService {
 
     public Chat createGroupChat(String authData,  ChatForMenuChatsDto chatForMenuChatsDto){
         Chat chat = new Chat();
-        ProfileUserDto owner = userClient.getUserByUsername(jwtVerification.getUsernameFromJwt(authData));
+        ProfileUserDto owner = userClient.getUserByUsername(authData);
         if(chatForMenuChatsDto.getName() == null || chatForMenuChatsDto.getName().isEmpty()) {
             throw new ApiException("Имя группы должно быть задано обязательно", HttpStatus.BAD_REQUEST);
         }
