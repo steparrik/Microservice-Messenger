@@ -162,9 +162,16 @@ services:
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
       jwt.secret: ${JWT_SECRET}
+      RABBIT_HOST: rabbitmq
+      RABBIT_PORT: 5672
+      RABBIT_USERNAME: ${RABBIT_USERNAME}
+      RABBIT_PASSWORD: ${RABBIT_PASSWORD}
+      RABBIT_V_HOST: ${RABBIT_V_HOST}
     depends_on:
       - postgres
       - redis
+      - rabbitmq
+      - web-socket
 
   users:
     build:
