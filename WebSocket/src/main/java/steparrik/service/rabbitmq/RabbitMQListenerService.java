@@ -11,7 +11,7 @@ import steparrik.dto.message.MessageDTO;
 public class RabbitMQListenerService {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    @RabbitListener(queues = "messageQueue")
+    @RabbitListener(queues = "savedMessageQueue")
     public void listenMessage(MessageDTO messageDTO) {
         simpMessagingTemplate.convertAndSend("/topic/public/" + messageDTO.getChatId(), messageDTO);
     }

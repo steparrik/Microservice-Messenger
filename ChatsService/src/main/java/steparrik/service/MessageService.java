@@ -27,7 +27,7 @@ public class MessageService {
         messageRepository.save(message);
     }
 
-    public MessageDTO sendMessage(long id, MessageDTO messageDTO, ProfileUserDto sender, Chat chat) {
+    public MessageDTO sendMessage(MessageDTO messageDTO, ProfileUserDto sender, Chat chat) {
         Message message = new Message();
 
         message.setMessageText(messageDTO.getMessageText());

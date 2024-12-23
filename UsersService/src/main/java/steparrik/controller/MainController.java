@@ -21,7 +21,7 @@ public class MainController {
     private final JWTVerification jwtVerification;
 
     @GetMapping("/profile")
-    public ProfileUserDto profile(@RequestHeader(HttpHeaders.AUTHORIZATION) String authData,
+    public ProfileUserDto profile(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authData,
                                      @RequestParam(required = false)String username,
                                      @RequestParam(required = false) String phoneNumber) {
         User user;

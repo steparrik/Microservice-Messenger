@@ -3,6 +3,15 @@ server:
 spring:
   application:
     name: AuthService
+  rabbitmq:
+    host: ${RABBIT_HOST}
+    port: ${RABBIT_PORT}
+    username: ${RABBIT_USERNAME}
+    password: ${RABBIT_PASSWORD}
+    virtual-host: ${RABBIT_V_HOST}
+    listener:
+      simple:
+        default-requeue-rejected: false
   datasource:
     driver-class-name: org.postgresql.Driver
     username: ${DB_USERNAME}

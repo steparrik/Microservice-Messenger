@@ -1,8 +1,10 @@
 package steparrik.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.protocol.types.Field;
+import org.hibernate.Hibernate;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -139,7 +141,7 @@ public class ChatService {
     }
 
 
-
+    @Transactional
     public Chat getDefiniteChat(long id, ProfileUserDto profileUserDto){
         Chat chat = findChatById(id);
 

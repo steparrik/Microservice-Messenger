@@ -64,7 +64,7 @@ public class MainController {
         ProfileUserDto sender = userClient.getUserByUsername(authHeader);
         Chat chat = chatService.getDefiniteChat(id, sender);
 
-        return messageService.sendMessage(id, messageDTO, sender, chat);
+        return messageService.sendMessage(messageDTO, sender, chat);
     }
 
     @PutMapping("/{id}")
