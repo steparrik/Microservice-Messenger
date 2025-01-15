@@ -300,7 +300,7 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
             const message = await sendMessageOnServer(chatId, messageContent)
 
             if (messageContent && stompClient && stompClient.connected) {
-                stompClient.send("/app/chat.sendMessage/" + chatId, {}, JSON.stringify(message1));
+                stompClient.send("/app/chat.sendMessage/" + chatId, {}, JSON.stringify(message));
             }
             messageInput.querySelector("#message").value = '';
         }
