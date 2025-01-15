@@ -307,7 +307,7 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
             }
 
             if (messageContent && stompClient && stompClient.connected) {
-                stompClient.send("/app/chat.sendMessage/" + chatId, {}, JSON.stringify(message));
+                stompClient.send("/app/chat.sendMessage/" + chatId, {}, JSON.stringify(message1));
             }
             messageInput.querySelector("#message").value = '';
         }
@@ -316,7 +316,6 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
             const currentUrl = window.location.href;
             const url = new URL(currentUrl);
             const chatId = url.searchParams.get('chatId');
-            // Subscribe to the Public Topic
             stompClient.subscribe('/topic/public/' + chatId, onMessageReceived);
         }
 

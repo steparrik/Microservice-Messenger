@@ -52,18 +52,20 @@ public class ChatService {
     @Cacheable(value = "chats", key = "#authData")
     public List<ChatForMenuChatsDto> getChats(String authData) {
         ProfileUserDto profileUserDto = userClient.getUserByUsername(authData);
-        List<Chat> chats =  chatRepository.findAllByParticipantsId(profileUserDto.getId());
+//        List<Chat> chats =  chatRepository.findAllByParticipantsId(profileUserDto.getId());
+
+        List<Chat> chats =  chatRepository.findAllByParticipantsIdSort(profileUserDto.getId());
 
 
-        chats.sort((o1, o2) -> {
-                if (o1.getMessages() == null || o1.getMessages().isEmpty()) {
-                    return (o2.getMessages() == null || o2.getMessages().isEmpty()) ? 0 : 1;
-                }
-                if (o2.getMessages() == null || o2.getMessages().isEmpty()) {
-                    return -1;
-                }
-                return o2.getMessages().get(o2.getMessages().size()-1).getTimestamp().compareTo(o1.getMessages().get(o1.getMessages().size()-1).getTimestamp());
-        });
+//        chats.sort((o1, o2) -> {
+//                if (o1.getMessages() == null || o1.getMessages().isEmpty()) {
+//                    return (o2.getMessages() == null || o2.getMessages().isEmpty()) ? 0 : 1;
+//                }
+//                if (o2.getMessages() == null || o2.getMessages().isEmpty()) {
+//                    return -1;
+//                }
+//                return o2.getMessages().get(o2.getMessages().size()-1).getTimestamp().compareTo(o1.getMessages().get(o1.getMessages().size()-1).getTimestamp());
+//        });
 
 
         List<ChatForMenuChatsDto> listChatForMenuChatsDto =  chats.stream().map(chat -> {
