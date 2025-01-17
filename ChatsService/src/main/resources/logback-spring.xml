@@ -1,0 +1,18 @@
+<configuration>
+
+    <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>logstash:5044</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>
+                {
+                "spring.application.name": "ChatsService"
+                }
+            </customFields>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="logstash" />
+    </root>
+
+</configuration>

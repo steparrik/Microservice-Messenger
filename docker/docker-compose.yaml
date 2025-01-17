@@ -221,7 +221,38 @@ services:
       dockerfile: ../FrontendService/Dockerfile
     ports:
       - "8082:8082"
+
+  elasticsearch:
+    image: elastic/elasticsearch:8.17.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+
+  logstash:
+    image: logstash:7.17.26
+    container_name: logstash
+    ports:
+      - "5044:5044"
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: kibana:7.17.26
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
 volumes:
   pgdata:
   rabbitmq_data:
   redis_data:
+  elasticsearch_data:

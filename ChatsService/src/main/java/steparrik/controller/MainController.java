@@ -3,6 +3,7 @@ package steparrik.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 import steparrik.client.UserClient;
@@ -24,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/chats")
 @Tag(name = "chats")
+@Slf4j
 public class MainController {
     private final ChatForMenuChatsMapper chatForMenuChatsMapper;
     private final ChatService chatService;
@@ -34,6 +36,7 @@ public class MainController {
 
     @GetMapping
     public List<ChatForMenuChatsDto> chats(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader)  {
+        log.info("Бро получил чаты");
         return chatService.getChats(authHeader);
     }
 
@@ -43,6 +46,7 @@ public class MainController {
                                         @Valid @RequestBody ChatForMenuChatsDto chatForMenuChatsDto){
         Chat chat = chatService.createChat(authHeader, username, phoneNumber, chatForMenuChatsDto);
         ChatForMenuChatsDto chatForResponse = chatForMenuChatsMapper.toDto(chat);
+        log.info("Бро создал чат");
         return chatService.chooseDialogName(authHeader, chatForResponse, chat);
     }
 
