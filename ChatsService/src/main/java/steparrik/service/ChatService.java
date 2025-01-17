@@ -151,12 +151,12 @@ public class ChatService {
             throw new ApiException("В вашем списке чатов, нет чата с данным ID", HttpStatus.NOT_FOUND);
         }
 
-        chat.getMessages().sort(new Comparator<Message>() {
-            @Override
-            public int compare(Message o1, Message o2) {
-                return o1.getTimestamp().compareTo(o2.getTimestamp());
-            }
-        });
+//        chat.getMessages().sort(new Comparator<Message>() {
+//            @Override
+//            public int compare(Message o1, Message o2) {
+//                return o1.getTimestamp().compareTo(o2.getTimestamp());
+//            }
+//        });
 
         return chat;
     }

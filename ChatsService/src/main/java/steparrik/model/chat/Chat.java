@@ -32,6 +32,7 @@ public class Chat {
     private ChatType chatType;
 
     @OneToMany(mappedBy = "chat")
+    @OrderBy("timestamp ASC")
     private List<Message> messages;
 
 }
