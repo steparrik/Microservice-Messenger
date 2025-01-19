@@ -298,9 +298,16 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
             const chatId = url.searchParams.get('chatId');
 
             const message = await sendMessageOnServer(chatId, messageContent)
+            const message1 =  {
+                messageText: messageContent,
+                chatId: chatId,
+                sender: {
+                    username: parseJwt(localStorage.getItem("accessToken")).sub
+                }
+            }
 
             if (messageContent && stompClient && stompClient.connected) {
-                stompClient.send("/app/chat.sendMessage/" + chatId, {}, JSON.stringify(message));
+                stompClient.send("/app/chat.sendMessage/" + chatId, {}, JSON.stringify(message1));
             }
             messageInput.querySelector("#message").value = '';
         }

@@ -1,4 +1,4 @@
-package steparrik.config;
+package steparrik.config.rabbit;
 
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
@@ -15,17 +15,10 @@ import org.springframework.context.annotation.Configuration;
 
 public class RabbitMQConfig {
 
-
     @Bean
     public Queue messageQueue() {
-        return new Queue("rawMessageQueue", true);
+        return new Queue("savedMessageQueue", true);
     }
-
-    @Bean
-    public Queue notificationQueue() {
-        return new Queue("notificationQueue", true);
-    }
-
     @Bean
     public Jackson2JsonMessageConverter jackson2JsonMessageConverter() {
         Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter();

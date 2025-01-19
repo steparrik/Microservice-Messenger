@@ -1,8 +1,10 @@
 package steparrik.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.protocol.types.Field;
+import org.hibernate.Hibernate;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -141,7 +143,7 @@ public class ChatService {
     }
 
 
-
+    @Transactional
     public Chat getDefiniteChat(long id, ProfileUserDto profileUserDto){
         Chat chat = findChatById(id);
 
@@ -149,12 +151,12 @@ public class ChatService {
             throw new ApiException("В вашем списке чатов, нет чата с данным ID", HttpStatus.NOT_FOUND);
         }
 
-        chat.getMessages().sort(new Comparator<Message>() {
-            @Override
-            public int compare(Message o1, Message o2) {
-                return o1.getTimestamp().compareTo(o2.getTimestamp());
-            }
-        });
+//        chat.getMessages().sort(new Comparator<Message>() {
+//            @Override
+//            public int compare(Message o1, Message o2) {
+//                return o1.getTimestamp().compareTo(o2.getTimestamp());
+//            }
+//        });
 
         return chat;
     }
