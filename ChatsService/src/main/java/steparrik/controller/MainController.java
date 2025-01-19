@@ -18,6 +18,7 @@ import steparrik.utils.jwt.JWTVerification;
 import steparrik.utils.mapper.chat.ChatForCorrespondMapper;
 import steparrik.utils.mapper.chat.ChatForMenuChatsMapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -52,9 +53,12 @@ public class MainController {
 
     @GetMapping("/{id}")
     public ChatForMenuChatsDto definiteChat(@PathVariable long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader){
+        var startTime = System.currentTimeMillis();
         ProfileUserDto profileUserDto = userClient.getUserByUsername(authHeader);
         Chat chat = chatService.getDefiniteChat(id, profileUserDto);
         ChatForCorrespondDto chatForCorrespondDto = chatForCorrespondMapper.toDto(chat);
+        var finishTime = System.currentTimeMillis();
+        System.out.println(finishTime - startTime);
         return chatService.chooseDialogName(authHeader, chatForCorrespondDto, chat);
     }
 

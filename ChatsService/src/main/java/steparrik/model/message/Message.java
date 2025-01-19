@@ -8,7 +8,10 @@ import steparrik.model.chat.Chat;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "messages")
+@Table(name = "messages", indexes = {
+        @Index(name = "idx_messages_chat_id", columnList = "chat_id"),
+        @Index(name = "idx_timestamp", columnList = "timestamp")
+})
 @ToString
 @Getter
 @Setter

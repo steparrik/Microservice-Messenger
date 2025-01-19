@@ -23,7 +23,9 @@ public class Chat {
     private String name;
 
     @ElementCollection
-    @CollectionTable(name = "chat_participants", joinColumns = @JoinColumn(name = "chat_id"))
+    @CollectionTable(name = "chat_participants",
+            joinColumns = @JoinColumn(name = "chat_id"),
+            indexes = @Index(name = "idx_chat_id", columnList = "chat_id"))
     @Column(name = "user_id")
     private List<Long> participantsId;
 
