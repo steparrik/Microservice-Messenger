@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Чаты</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style_chats.css">
 </head>
 <body>
 <header>
     <nav>
         <a href="profile">Профиль</a>
-        <button onclick="location.href='newChat'" class="new-chat">Новый чат</button>
+        <a href="newChat">Новый чат</a>
     </nav>
 </header>
 <main>
     <h1>Чаты</h1>
+    <div id="loader" class="loader"></div>
     <ul id="chat-list">
     </ul>
 </main>

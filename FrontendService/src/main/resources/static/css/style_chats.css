@@ -1,0 +1,362 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1a1a2e; /* Темно-синий фон */
+    margin: 0;
+    padding: 0;
+}
+
+.notification-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background-color: #e94560; /* Ярко-розовый */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 10;
+}
+
+.notification-text {
+    line-height: 40px;
+    text-align: center;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    float: left;
+}
+
+header {
+    background-color: #16213e; /* Темно-синий */
+    color: #ffffff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+header nav {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 20px;
+}
+
+header nav a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    margin-left: 20px;
+    padding: 10px 15px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+header nav a:hover {
+    color: #e94560; /* Ярко-розовый */
+    background-color: #0f3460; /* Темно-синий */
+}
+
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #16213e; /* Темно-синий */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #ffffff;
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input[type="text"],
+input[type="password"],
+button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #e94560; /* Ярко-розовый */
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 12px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #d8345f; /* Темно-розовый */
+}
+
+#error {
+    color: #e94560; /* Ярко-розовый */
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+    main {
+        max-width: 300px;
+    }
+
+    header nav {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 400px) {
+    main {
+        padding: 10px;
+    }
+}
+
+#chat-page {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #16213e; /* Темно-синий */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.chat-container {
+    margin-bottom: 20px;
+}
+
+.chat-header {
+    background-color: #0f3460; /* Темно-синий */
+    padding: 10px;
+    font-size: 20px;
+    text-align: center;
+    color: #ffffff;
+}
+
+ul#messageArea {
+    list-style-type: none;
+    padding: 0;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+#messageForm {
+    margin-top: 20px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+.input-group input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    scroll-padding-bottom: 80px;
+}
+
+.input-group button {
+    width: auto;
+    padding: 10px 15px;
+    margin-left: 10px;
+    border: none;
+    background-color: #e94560; /* Ярко-розовый */
+    color: #ffffff;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.input-group button:hover {
+    background-color: #d8345f; /* Темно-розовый */
+}
+
+.message {
+    max-width: 70%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 20px;
+    clear: both;
+    word-wrap: break-word;
+}
+
+button[class="new-chat"] {
+    width: auto;
+    padding: 10px 15px;
+    margin-left: 10px;
+    border: none;
+    color: #ffffff;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.message.left {
+    background-color: #0f3460; /* Темно-синий */
+    float: left;
+    color: #ffffff;
+}
+
+rightM {
+    float: right;
+}
+
+.message.right {
+    background-color: #e94560; /* Ярко-розовый */
+    float: right;
+    color: #ffffff;
+}
+
+.message .message-text {
+    font-size: 18px;
+    margin-bottom: 3px;
+}
+
+.message .message-time {
+    font-size: 12px;
+    color: #cccccc;
+    text-align: right;
+}
+
+.message .senderNameMini {
+    font-size: 13px;
+    font-weight: bold;
+    color: #e94560; /* Ярко-розовый */
+    text-align: left;
+}
+
+ul#messageArea {
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+ul#messageArea::-webkit-scrollbar {
+    width: 0;
+}
+
+#chatList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.chat-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #0f3460; /* Темно-синий */
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: relative;
+}
+
+.chat-item:hover {
+    background-color: #0f3460; /* Темно-синий */
+}
+
+.chat-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+}
+
+.chat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #e94560; /* Ярко-розовый */
+    color: #ffffff;
+    border-radius: 50%;
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.chat-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.chat-last-message {
+    font-size: 12px;
+    color: #cccccc;
+}
+#profileData {
+    font-family: Arial, sans-serif; /* Изменяет шрифт */
+    font-size: 16px; /* Размер шрифта */
+    color: #ffffff; /* Цвет текста */
+}
+
+#profileData a {
+    font-size: 18px; /* Увеличенный размер для ссылок */
+    color: #ffffff; /* Ярко-розовый цвет текста */
+    text-decoration: none; /* Убираем подчеркивание у ссылок */
+}
+
+#profileData img {
+    width: 100px; /* Задаем размер для аватарки */
+    height: 100px;
+    border-radius: 50%; /* Делаем изображение круглым */
+    margin-top: 10px;
+}
+
+#error-name {
+    display: block; /* Сделаем элемент блочным, чтобы текст был на новой строке */
+    color: #ffffff; /* Белый цвет текста */
+    font-size: 14px; /* Размер шрифта */
+    margin-top: 5px; /* Отступ сверху, чтобы текст был ниже */
+}
+
+
+.loader {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #e94560;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.hidden {
+    display: none;
+}

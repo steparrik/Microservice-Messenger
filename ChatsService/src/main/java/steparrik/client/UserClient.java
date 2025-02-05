@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import steparrik.config.feign.FeignConfig;
 import steparrik.dto.user.ProfileUserDto;
 
-@FeignClient(name = "users", url = "http://users:8084", configuration = FeignConfig.class)
+@FeignClient(name = "users", url = "http://users-service.default.svc.cluster.local:8084", configuration = FeignConfig.class)
 public interface UserClient {
 
     @GetMapping("/profile/{id}")

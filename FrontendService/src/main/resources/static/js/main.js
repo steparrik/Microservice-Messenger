@@ -3,6 +3,7 @@ const newDialog = document.querySelector("#new-dialog");
 const newGroup = document.querySelector("#new-group");
 const loginForm = document.querySelector('#login-form');
 const chatList = document.getElementById('chat-list');
+const loader = document.getElementById('loader')
 const  errorAuth = document.querySelector("#error")
 const chatName = document.querySelector("#chatName");
 const chatPage = document.querySelector("#chat-page");
@@ -19,7 +20,8 @@ let rToken = localStorage.getItem("refreshToken");
 const error = document.querySelector("#error-name")
 const addNewParticipant = document.querySelector("#addNewParticipant")
 const addParticipant = document.querySelector("#addParticipant")
-
+const apiGatewayUrl = "http://cryptaides.ru/api/"
+const webSocketUrl = "http://92.255.107.129:30081/"
 
 
 document.addEventListener('DOMContentLoaded',  async function (event) {
@@ -90,6 +92,7 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
         function onConnected() {
             console.log('Connected to WebSocket');
             fetchChats();
+            loader.classList.add("hidden")
         }
 
         function onError(error) {
@@ -116,14 +119,15 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
         }
 
         function connect() {
-            const socket = new SockJS('http://localhost:8081/ws');
+            const socket = new SockJS(webSocketUrl+'ws');
             stompClient = Stomp.over(socket);
+            const token = localStorage.getItem("accessToken");
 
-            stompClient.connect({}, onConnected, onError);
+            stompClient.connect({Authorization: token }, onConnected, onError);
         }
 
         function fetchChats() {
-            fetch('http://localhost:8086/chats', {
+            fetch(apiGatewayUrl+'chats', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -297,7 +301,6 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
             const url = new URL(currentUrl);
             const chatId = url.searchParams.get('chatId');
 
-            const message = await sendMessageOnServer(chatId, messageContent)
             const message1 =  {
                 messageText: messageContent,
                 chatId: chatId,
@@ -371,13 +374,14 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
         }
 
         function connect() {
-            const socket = new SockJS('http://localhost:8081/ws');
+            const socket = new SockJS(webSocketUrl+'ws');
             stompClient = Stomp.over(socket);
+            const token = localStorage.getItem("accessToken");
 
-            stompClient.connect({}, onConnected, onError);
+            stompClient.connect({Authorization: token }, onConnected, onError);
         }
 
-        fetch(`http://localhost:8086/chats/` + chatId, {
+        fetch(apiGatewayUrl+`chats/` + chatId, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -460,6 +464,8 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
 
     if (profilePage) {
             const user = await getProfile();
+        loader.classList.remove("loader")
+        loader.classList.add("hidden")
 
 
             const profileLi = document.createElement('div');
@@ -512,7 +518,7 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
                 phoneNumber: phoneNumber,
                 fullName: fullName,
             }
-            fetch('http://localhost:8086/registration', {
+            fetch(apiGatewayUrl+'registration', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -545,7 +551,7 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
                 password: password
             };
 
-            fetch('http://localhost:8086/auth', {
+            fetch(apiGatewayUrl+'auth', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -572,7 +578,7 @@ document.addEventListener('DOMContentLoaded',  async function (event) {
 });
 
 function getProfile() {
-    return fetch('http://localhost:8086/profile', {
+    return fetch(apiGatewayUrl+'profile', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -595,7 +601,7 @@ function doRefreshToken(){
         accessToken: acToken,
         refreshToken: rToken
     }
-    return fetch('http://localhost:8086/refresh', {
+    return fetch(apiGatewayUrl+'refresh', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -621,7 +627,7 @@ function sendMessageOnServer(chatId, text) {
     const messageText = {
         messageText: text
     }
-    return fetch('http://localhost:8086/chats/'+chatId, {
+    return fetch(apiGatewayUrl+'chats/'+chatId, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -646,7 +652,7 @@ function sendMessageOnServer(chatId, text) {
 
 
 function addAndGetNewDialog(nameCompanion, newChatData){
-    return fetch('http://localhost:8086/chats' +
+    return fetch(apiGatewayUrl+'chats' +
         '?username='+nameCompanion, {
         method: 'POST',
         headers: {
@@ -670,7 +676,7 @@ function addAndGetNewDialog(nameCompanion, newChatData){
 }
 
 async function addAndGetNewGroup(groupName){
-    return fetch('http://localhost:8086/chats', {
+    return fetch(apiGatewayUrl+'chats', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -692,7 +698,7 @@ async function addAndGetNewGroup(groupName){
 }
 
 function addParticipants(nameCompanion, chatId){
-    return fetch('http://localhost:8086/chats/'+chatId +
+    return fetch(apiGatewayUrl+'chats/'+chatId +
         '?username='+nameCompanion, {
         method: 'PUT',
         headers: {

@@ -32,7 +32,6 @@ public class ChatService {
     private final ChatRepository chatRepository;
     private final UserClient userClient;
     private final ChatForMenuChatsMapper chatForMenuChatsMapper;
-    private final JWTVerification jwtVerification;
 
 
     public void save(Chat chat) {
@@ -43,6 +42,7 @@ public class ChatService {
         return chatRepository.findById(id).orElseThrow(() ->
                 new ApiException("Нет чата с данным id", HttpStatus.NOT_FOUND));
     }
+
     @Cacheable(value = "participantsCache", key = "#id")
     public List<ProfileUserDto> getParticipants(long id){
         List<Long> participantsId = findChatById(id).getParticipantsId();
